@@ -1,6 +1,7 @@
 # Angular Voting Applicatoin
 
 **Demo:** https://bi-labor.github.io/angular
+**Feedback:** https://goo.gl/forms/PTYOdBNIB0MpSlzu1 
 
 ## Table of contents
 - [0. Introduction](#0-introduction)
@@ -895,5 +896,5 @@ You can use this trick `this.graphData = JSON.parse(JSON.stringify(this.graphDat
 ### 5.d Create a bar chart that shows the number of votes for each question
 
 
-
+## Feedback: https://goo.gl/forms/PTYOdBNIB0MpSlzu1 
 
