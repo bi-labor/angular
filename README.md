@@ -1,5 +1,36 @@
 # Angular Voting Applicatoin
+
+**Demo:** https://bi-labor.github.io/angular
+
+## Table of contents
+- [0. Introduction](#0-introduction)
+  * [0.a Used technologies](#0a-used-technologies)
+  * [0.b Typescript](#0b-typescript)
+- [1. Create project sceleton](#1-create-project-sceleton)
+  * [1.a. Create a new project](#1a-create-a-new-project)
+  * [1.b. Add simple design](#1b-add-simple-design)
+- [2. Create Questions](#2-create-questions)
+  * [2.a create questoin design](#2a-create-questoin-design)
+  * [2.b create Model](#2b-create-model)
+  * [2.c Fill UI with data binding](#2c-fill-ui-with-data-binding)
+  * [2.d add new Question form](#2d-add-new-question-form)
+  * [2.e Add Firebase](#2e-add-firebase)
+- [3. Implement Question deletion](#3-implement-question-deletion)
+    + [3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.ts`](#3a-add-delete-button-to-every-question-in-the-same-line-with-the-description-at-votes-question-questioncomponenetts)
+    + [3.b Implement `deleteQuestion()` function at `votes/question/question.component.ts`](#3b-implement-deletequestion-function-at-votes-question-questioncomponentts)
+    + [3.c Implement `delete(questionId: string)` function at `services/votes.service.ts`](#3c-implement-delete-questionid-string-function-at-services-votesservicets)
+- [4. Add Notifications](#4-add-notifications)
+  * [4.a Add notifications module](#4a-add-notifications-module)
+  * [4.b Add toasts](#4b-add-toasts)
+- [5. Add Statistics](#5-add-statistics)
+  * [5.a Add plotly to the project](#5a-add-plotly-to-the-project)
+  * [5.b add it to the app module](#5b-add-it-to-the-app-module)
+  * [5.c Create a new `statistic` component](#5c-create-a-new-statistic-component)
+  * [5.d Create statistic logic at `statistic/statistic.component.ts`](#5d-create-statistic-logic-at-statistic-statistic-component-ts)
+  * [5.d Create a bar chart that shows the number of votes for each question](#5d-create-a-bar-chart-that-shows-the-number-of-votes-for-each-question)
+
 ## 0. Introduction
+
 
 ### 0.a Used technologies
  * Typescript (+ HTML,CSS,JavaScript)
@@ -673,7 +704,7 @@ ModalModule.forRoot(),
 
 
 
-### 2.d Add Firebase
+### 2.e Add Firebase
 
 #### Data stucure
 
