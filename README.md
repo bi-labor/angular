@@ -738,14 +738,24 @@ You can create your own firebase token, but you can use these:
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'AIzaSyB3Kga9Tcey0pzxhLusnC98hfk_uTxYwaM',
+    apiKey: "AIzaSyD0qWw7YgMqGd-ELV0a8ea8O0w2u29wR4M",
+    authDomain: "bi-labor-angular2.firebaseapp.com",
+    databaseURL: "https://bi-labor-angular2.firebaseio.com",
+    projectId: "bi-labor-angular2",
+    storageBucket: "bi-labor-angular2.appspot.com",
+    messagingSenderId: "1009646526609"
+  }
+};
+```
+
+Alternative settings:
+```
+apiKey: 'AIzaSyB3Kga9Tcey0pzxhLusnC98hfk_uTxYwaM',
     authDomain: 'bi-labor-angular.firebaseapp.com',
     databaseURL: 'https://bi-labor-angular.firebaseio.com',
     projectId: 'bi-labor-angular',
     storageBucket: 'bi-labor-angular.appspot.com',
     messagingSenderId: '768872534049'
-  }
-};
 ```
 
 #### Update votes service at `services/votes.service.ts`
