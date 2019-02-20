@@ -529,10 +529,13 @@ export class QuestionComponent {
       <div class="col-12">
         <div class="custom-control custom-radio custom-control-inline"
              *ngFor="let option of question.options | async; let i=index">
-          <input [(ngModel)]="selected" [value]="option.id" name="radio-{{question.question}}" id="radio-{{i}}"
+          <input [(ngModel)]="selected"
+                 [value]="option.id"
+                 name="radio-{{question.id}}"
+                 id="radio-{{question.id}}{{i}}"
                  type="radio"
-                 class="custom-control-input" value="rabbit">
-          <label for="radio-{{i}}" class="custom-control-label">{{i+1}}) {{option.name}}</label>
+                 class="custom-control-input">
+          <label for="radio-{{question.id}}{{i}}" class="custom-control-label">{{i+1}}) {{option.name}}</label>
         </div>
         <button (click)="vote()" type="button" class="btn btn-secondary float-right">Vote</button>
       </div>
