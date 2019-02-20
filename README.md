@@ -750,12 +750,12 @@ export const environment = {
 
 Alternative settings:
 ```
-apiKey: 'AIzaSyB3Kga9Tcey0pzxhLusnC98hfk_uTxYwaM',
-    authDomain: 'bi-labor-angular.firebaseapp.com',
-    databaseURL: 'https://bi-labor-angular.firebaseio.com',
-    projectId: 'bi-labor-angular',
-    storageBucket: 'bi-labor-angular.appspot.com',
-    messagingSenderId: '768872534049'
+    apiKey: "AIzaSyDol8jLaHIPSfChtIyg7X36aMyVrN83K_4",
+    authDomain: "bi-labor-angular1.firebaseapp.com",
+    databaseURL: "https://bi-labor-angular1.firebaseio.com",
+    projectId: "bi-labor-angular1",
+    storageBucket: "",
+    messagingSenderId: "363613880788"
 ```
 
 #### Update votes service at `services/votes.service.ts`
