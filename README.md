@@ -261,12 +261,13 @@ Add navigator and main container to `votes.component.html`:
 ```HTML
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a class="navbar-brand" href="https://www.aut.bme.hu/Course/VIAUMB00">Angular Lab</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+  <button class="navbar-toggler" (click)="isCollapsed = !isCollapsed" 
+	  type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
           aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault" [collapse]="isCollapsed">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
         <a class="nav-link" [routerLink]="['/votes']">Questions <span class="sr-only">(current)</span></a>
@@ -285,6 +286,18 @@ Add navigator and main container to `votes.component.html`:
 
 </main><!-- /.container -->
 
+```
+#### Add `isCollapsed` to  `votes/votes.component.ts`
+```Typescript
+  isCollapsed = true;
+```
+
+#### Add `CollapseModule` to `app.module.ts`
+```Typescript
+imports:[
+...
+CollapseModule.forRoot()
+]
 ```
 
 ## 2. Create Questions
@@ -771,7 +784,7 @@ export class VotesService {
   private questionCollection: AngularFirestoreCollection<Question>;
 
   constructor(private afs: AngularFirestore) {
-    this.questionCollection = afs.collection<Question>('questions');
+    this.questionCollection = afs.collection<Question>('questions', ref => ref.orderBy('created', 'desc').limit(50));
 
     this.questions = <any>this.questionCollection.snapshotChanges().pipe(this.entityPipe('options'));
   }
