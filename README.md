@@ -725,9 +725,10 @@ export class VotesService {
         <p class="card-text">{{question.description}}</p>
       </div>
 	  --------Copy between these----------
-      <div class="col-4">
+       <div class="col-4">
         <button type="button" (click)="deleteQuestion()" class="btn btn-outline-danger float-right">Delete</button>
         <a  [routerLink]="['/statistic', question.id]"
+           class="btn btn-outline-primary float-right mr-2 ml-2">Statistic</a>
       </div>
 	  --------Copy between these----------
     </div>
