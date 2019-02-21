@@ -454,6 +454,8 @@ MIT
 
 firebase/firestore
 
+ngx-bootstrap/collapse
+
 ngx-bootstrap
 MIT
 The MIT License (MIT)
