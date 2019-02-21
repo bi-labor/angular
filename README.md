@@ -368,8 +368,12 @@ export class QuestionComponent {
   constructor(private votesService: VotesService) {
   }
 
-  vote() {
-	// TODO implement
+  async vote() {
+    if (!this.selected) {
+      return;
+    }
+    await this.votesService.vote(this.question.id, this.selected);
+    // TODO: add toast
   }
 
   deleteQuestion() {
@@ -696,9 +700,9 @@ export class VotesService {
     await this.questionCollection.add(q);
   }
 
-  vote(questionId: string, optionLabel: string) {
-    this.questionCollection.doc(questionId)
-      .collection<Vote>('votes').add({timeStamp: Date.now(), option: optionLabel}).catch(console.error);
+  async vote(questionId: string, optionLabel: string) {
+    await this.questionCollection.doc(questionId)
+      .collection<Vote>('votes').add({timeStamp: Date.now(), option: optionLabel});
   }
 
   delete(questionId: string) {
