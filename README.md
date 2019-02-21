@@ -717,7 +717,7 @@ export class VotesService {
 
 ## 3. Implement Question deletion
 
-#### 3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.ts`
+#### 3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.html`
 ```HTML
 	<div class="row">
       <div class="col-8">
