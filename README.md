@@ -749,9 +749,10 @@ npm install ngx-toastr --save
 npm install @angular/animations --save
 ```
 #### Add toaster module to `app.module.ts`
+#### Also add the toaster stylesheet to `angular.json`, read more at:https://github.com/scttcper/ngx-toastr
 
 #### **Note:** there is a current minor issue with the lib as the css style interfears with bootstrap
-Read more here: https://github.com/scttcper/ngx-toastr/issues/602*/
+Read more here: https://github.com/scttcper/ngx-toastr/issues/602
 #### Sollution
 Add this to `styles.css`
 ```css
