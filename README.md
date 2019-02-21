@@ -57,7 +57,7 @@
 
 #### Install angular cli
 ```bash
-node install @angular/cli -g
+npm install @angular/cli -g
 ```
 #### Create new project
 ```bash
@@ -501,7 +501,7 @@ You can use a form generator to creat bootstrap 4 forms: https://bootstrapformbu
         </div>
       </div>
 
-      <div class="form-group row" *ngFor="let option of options; let i = index">
+      <div class="form-group row" *ngFor="let option of question.options; let i = index">
         <label for="description" class="col-2 offset-3 col-form-label">{{i + 1}}.</label>
         <div class="col-7">
           <input [(ngModel)]="option.label"
@@ -560,7 +560,6 @@ export class VotesComponent {
       description: '',
       options: []
     };
-    this.options = [];
     this.addOption();
     this.addOption();
     this.modalRef = this.modalService.show(template);
@@ -568,7 +567,7 @@ export class VotesComponent {
 
   async addQuestion() {
     this.modalRef.hide();
-    await this.votesService.addQuestion(this.question, this.options);
+    await this.votesService.addQuestion(this.question);
   }
 
   addOption() {
@@ -718,7 +717,7 @@ export class VotesService {
 
 ## 3. Implement Question deletion
 
-#### 3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.ts`
+#### 3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.html`
 ```HTML
 	<div class="row">
       <div class="col-8">
