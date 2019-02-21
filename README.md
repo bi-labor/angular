@@ -28,8 +28,9 @@
   * [5.a Add plotly to the project](#5a-add-plotly-to-the-project)
   * [5.b add it to the app module](#5b-add-it-to-the-app-module)
   * [5.c Create a new `statistic` component](#5c-create-a-new-statistic-component)
-  * [5.d Create statistic logic at `statistic/statistic.component.ts`](#5d-create-statistic-logic-at-statistic-statistic-component-ts)
-  * [5.d Create a bar chart that shows the number of votes for each question](#5d-create-a-bar-chart-that-shows-the-number-of-votes-for-each-question)
+  * [5.d Design the statistic component](5d-design-the-statistic-component)
+  * [5.e Create statistic logic at `statistic/statistic.component.ts`](#5e-create-statistic-logic-at-statisticstatisticcomponentts)
+  * [5.f Create a bar chart that shows the number of votes for each question](5f-create-a-bar-chart-that-shows-the-number-of-votes-for-each-question)
 
 ## 0. Introduction
 
@@ -898,7 +899,7 @@ const routes: Routes = [
 ];
 ```
 
-### 5.d Design the `statistic` componenet 
+### 5.d Design the `statistic` component 
 #### Use  [navigation](https://getbootstrap.com/docs/4.0/components/navbar/) bar 
 #### Crate a [bootstrap card](https://getbootstrap.com/docs/4.0/components/card/) for your plot
 
