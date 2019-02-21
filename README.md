@@ -7,7 +7,8 @@
 ## Table of contents
 - [0. Introduction](#0-introduction)
   * [0.a Used technologies](#0a-used-technologies)
-  * [0.b Typescript](#0b-typescript)
+  * [0.b Typescript 101](#0b-typescript-101)
+  * [0.c Angular 101](#0c-angular-101)
 - [1. Create project sceleton](#1-create-project-sceleton)
   * [1.a. Create a new project](#1a-create-a-new-project)
   * [1.b. Add simple design](#1b-add-simple-design)
@@ -47,8 +48,8 @@
  * ngx-toaster for notifications
  * ploty.js for graph plotting
 
-### [Typescript 101](typescript_101.md)
-### [Angular 101](angular_101.md)
+### 0.b [Typescript 101](typescript_101.md)
+### 0.c [Angular 101](angular_101.md)
  
 ## 1. Create project sceleton
 
