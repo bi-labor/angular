@@ -160,10 +160,6 @@ after
 ```
 
 
-### 0.b Angular
-...
-### 0.c Firebase
-...
  
 ## 1. Create project sceleton
 
@@ -287,12 +283,12 @@ Add navigator and main container to `votes.component.html`:
 </main><!-- /.container -->
 
 ```
-#### Add `isCollapsed` to  `votes/votes.component.ts`
+##### Add `isCollapsed` to  `votes/votes.component.ts`
 ```Typescript
   isCollapsed = true;
 ```
 
-#### Add `CollapseModule` to `app.module.ts`
+##### Add `CollapseModule` to `app.module.ts`
 ```Typescript
 imports:[
 ...
@@ -366,45 +362,31 @@ ng generate component votes/question
 ### 2.b create Model
 #### `Question` interface at `model/Question.ts`
 ```Typescript
-/**
-A baisc Question description
-*/
 export interface Question {
   photoUrl?: string;
   question: string;
   description?: string;
-  created: time_stamp;
+  created: number;
+  options: QuestionOption[];
 }
 
-/**
-Entity for Firebase: the Obesrvable is used to lazyload a Firebase:firestore collection
-*/
 export interface QuestionEntity extends Question {
   id: string;
-  options: Observable<VoteOptionEntity[]>;
 }
 ```
-#### `VoteOption` interface at `model/VoteOption.ts`
+#### `Vote` interface at `model/Vote.ts`
 ```Typescript
-export interface VoteOption {
-  name: string;
-}
-
-export interface VoteOptionEntity {
-  id: string;
-  name: string;
-  votes?: Observable<OptionEntity[]>;
-}
-```
-
-#### `Option` interface at `model/Option.ts`
-```Typescript
-export interface Option {
+export interface Vote {
+  option: string;
   timeStamp: number;
 }
 
-export interface OptionEntity extends Option {
-  id: string;
+```
+
+#### `QuestionOption` interface at `model/QuestionOption.ts`
+```Typescript
+export interface QuestionOption {
+  label: string;
 }
 ```
 
@@ -421,46 +403,39 @@ But do it manually this time: Creat a new file at `services/vote.service.ts`
 @Injectable()
 export class VotesService {
 
-  questions: BehaviorSubject<QuestionEntity[]>;
+  questions: Observable<QuestionEntity[]>;
  
   constructor() {
-    this.questions = new BehaviorSubject([
-	{
-		id:'1',
-		photoUrl: '',
-		question: 'How are you?',
-		description: 'I'm good too..',
-		created: Date.now(),
-		options: new BehaviorSubject([
-					{
-					 id: '1',
-					 name: 'Good',
-					 votes: new BehaviorSubject([])
-					},					
-					{
-					 id: '2',
-					 name: 'ehhh.',
-					 votes: new BehaviorSubject([])
-					}
-					])
-	}
-	]);
+    this.questions = this.getDummyQuestions();
   }
 
-  async addQuestion(q: Question, options: VoteOption[]) {
-    throw new Error('not yet implemented');
+  getDummyQuestions(): Observable<QuestionEntity[]> {
+    return new BehaviorSubject([
+      {
+        id: '1',
+        photoUrl: '',
+        question: 'How are you?',
+        description: 'I\'m good too..',
+        created: Date.now(),
+        options: [{label: 'good'}, {label: 'ehh'}]
+      }
+    ]);
+  }	
+	
+  async addQuestion(q: Question) {
+    //TODO: implement
   }
 
-  vote(questionId: string, optionID: string) {
-    throw new Error('not yet implemented');
+  vote(questionId: string, optionLabel: string) {
+    //TODO: implement
   }
 
   delete(questionId: string) {
-    throw new Error('not yet implemented');
+    //TODO: implement
   }
 
-  getVotes(questionId: string): Observable<VoteOptionEntity[]> {  
-    throw new Error('not yet implemented');
+  getVotes(questionId: string): Observable<Vote[]> {  
+    //TODO: implement
   }
 }
 
@@ -540,21 +515,24 @@ export class QuestionComponent {
     <hr/>
     <div class="form-group row">
       <div class="col-12">
+        <form #voteForm="ngForm">
         <div class="custom-control custom-radio custom-control-inline"
-             *ngFor="let option of question.options | async; let i=index">
+             *ngFor="let option of question.options; let i=index">
           <input [(ngModel)]="selected"
-                 [value]="option.id"
+                 [value]="option.label"
                  name="radio-{{question.id}}"
                  id="radio-{{question.id}}{{i}}"
                  type="radio"
-                 class="custom-control-input">
-          <label for="radio-{{question.id}}{{i}}" class="custom-control-label">{{i+1}}) {{option.name}}</label>
+                 class="custom-control-input" required>
+          <label for="radio-{{question.id}}{{i}}" class="custom-control-label">{{i+1}}) {{option.label}}</label>
         </div>
-        <button (click)="vote()" type="button" class="btn btn-secondary float-right">Vote</button>
+        <button (click)="vote()"  [disabled]="!voteForm.form.valid" type="button" class="btn btn-secondary float-right">Vote</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
+
 
 ```
 
@@ -636,7 +614,7 @@ You can use a form generator to creat bootstrap 4 forms: https://bootstrapformbu
       <div class="form-group row" *ngFor="let option of options; let i = index">
         <label for="description" class="col-2 offset-3 col-form-label">{{i + 1}}.</label>
         <div class="col-7">
-          <input [(ngModel)]="option.name"
+          <input [(ngModel)]="option.label"
                  [name]="'option-'+(i+1)"
                  placeholder="Option {{i+1}}"
                  required="required"
@@ -677,7 +655,7 @@ export class VotesComponent {
 
   modalRef: BsModalRef;
   question: Question;
-  options: VoteOption[];
+  isCollapsed = true;
 
   constructor(public votesService: VotesService,
               private modalService: BsModalService) {
@@ -685,11 +663,12 @@ export class VotesComponent {
 
   openModal(template: HTMLElement) {
 
-    this.question = {
+     this.question = {
       question: '',
-      created: 0,
+      created: Date.now(),
       photoUrl: '',
-      description: ''
+      description: '',
+      options: []
     };
     this.options = [];
     this.addOption();
@@ -700,11 +679,10 @@ export class VotesComponent {
   async addQuestion() {
     this.modalRef.hide();
     await this.votesService.addQuestion(this.question, this.options);
-    this.toastr.success('New question added: ' + this.question.question, 'Success');
   }
 
   addOption() {
-    this.options.push({name: ''});
+    this.question.options.push({label: ''});
   }
 }
 ```
@@ -733,11 +711,9 @@ ModalModule.forRoot(),
 |--- photoUrl:string
 |--- description:string
 |--- created:number
-|--- options:collection
-   |--- id:string
-   |--- name:string
-   |--- votes:collection
-      |--- id:string
+|--- options:{label:string}[]
+|--- votes:collection
+      |--- option:string
       |--- timeStamp:number
 ```
 
@@ -764,7 +740,7 @@ export const environment = {
 };
 ```
 
-Alternative settings:
+Alternative you can also you this settings:
 ```
     apiKey: "AIzaSyDol8jLaHIPSfChtIyg7X36aMyVrN83K_4",
     authDomain: "bi-labor-angular1.firebaseapp.com",
@@ -772,6 +748,22 @@ Alternative settings:
     projectId: "bi-labor-angular1",
     storageBucket: "",
     messagingSenderId: "363613880788"
+```
+
+#### Add firebase to `app.module.ts`
+```Typescript
+imports: [
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule
+]
+```
+
+#### There is a current issue with the default settings of firebase in angularfire2, work around:
+Read more: https://github.com/angular/angularfire2/issues/1993#issuecomment-455830987
+```Typescript
+providers: [
+ {provide: FirestoreSettingsToken, useValue: {}}
+]
 ```
 
 #### Update votes service at `services/votes.service.ts`
@@ -784,55 +776,52 @@ export class VotesService {
   private questionCollection: AngularFirestoreCollection<Question>;
 
   constructor(private afs: AngularFirestore) {
-    this.questionCollection = afs.collection<Question>('questions', ref => ref.orderBy('created', 'desc').limit(50));
+     this.questionCollection = afs.collection<Question>('questions',
+      ref => ref.orderBy('created', 'desc').limit(50));
 
-    this.questions = <any>this.questionCollection.snapshotChanges().pipe(this.entityPipe('options'));
+    this.questions = <any>this.questionCollection.snapshotChanges().pipe(
+      map((actions: DocumentChangeAction<Question>[]) => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as Question;
+          const id = a.payload.doc.id;
+          return {id, ...data};
+        });
+      }));
   }
 
 
-  async addQuestion(q: Question, options: VoteOption[]) {
-    const added = await this.questionCollection.add({
-      question: q.question,
-      photoUrl: q.photoUrl,
-      description: q.description,
-      created: Date.now()
-    });
-    for (let i = 0; i < options.length; i++) {
-      await added.collection('options').add(options[i]);
-    }
+  getDummyQuestions(): Observable<QuestionEntity[]> {
+    return new BehaviorSubject([
+      {
+        id: '1',
+        photoUrl: '',
+        question: 'How are you?',
+        description: 'I\'m good too..',
+        created: Date.now(),
+        options: [{label: 'good'}, {label: 'ehh'}]
+      }
+    ]);
+  }
+ 
+  async addQuestion(q: Question) {
+    await this.questionCollection.add(q);
   }
 
-  vote(questionId: string, optionID: string) {
-    this.questionCollection
-      .doc(questionId + '/options/' + optionID)
-      .collection('votes').add({timeStamp: Date.now()}).catch(console.error);
+  vote(questionId: string, optionLabel: string) {
+    this.questionCollection.doc(questionId)
+      .collection<Vote>('votes').add({timeStamp: Date.now(), option: optionLabel}).catch(console.error);
   }
 
   delete(questionId: string) {
     // TODO implement
+    // don not forget to delete the votes subcollection manually
   }
 
 
-  getVotes(questionId: string): Observable<VoteOptionEntity[]> {
-    return this.questionCollection.doc(questionId)
-      .collection<VoteOptionEntity>('options').snapshotChanges()
-      .pipe(this.entityPipe('votes'));
+ getVotes(questionId: string): Observable<Vote[]> {
+    return this.questionCollection.doc(questionId).collection<Vote>('votes').valueChanges();
   }
 
-  entityPipe = <T>(subEntryName: string = null) => {
-    return map((actions: DocumentChangeAction<T>[]) => {
-      return actions.map(a => {
-        const data = a.payload.doc.data() as T;
-        const id = a.payload.doc.id;
-        const ret = {id, ...data};
-        if (subEntryName) {
-          ret[subEntryName] = this.afs.doc(a.payload.doc.ref.path)
-            .collection(subEntryName).snapshotChanges().pipe(this.entityPipe());
-        }
-        return ret;
-      });
-    });
-  };
 }
 ```
 
@@ -856,6 +845,7 @@ export class VotesService {
 
 #### 3.b Implement `deleteQuestion()` function at `votes/question/question.component.ts`
 #### 3.c Implement `delete(questionId: string)` function at `services/votes.service.ts`
+**Note:** Firestore [does not delete subcollections automatically](https://firebase.google.com/docs/firestore/manage-data/delete-data), but you can [do it manually](https://github.com/angular/angularfire2/issues/1400).
 **Hint:** Query the firestore document that has the id `questionId` and delete it.
 
 ## 4. Add Notifications
@@ -908,19 +898,23 @@ const routes: Routes = [
 ];
 ```
 
-### 5.d Create statistic logic at `statistic/statistic.component.ts`
+### 5.d Design the `statistic` componenet 
+#### Use  [navigation](https://getbootstrap.com/docs/4.0/components/navbar/) bar 
+#### Crate a [bootstrap card](https://getbootstrap.com/docs/4.0/components/card/) for your plot
+
+### 5.e Create statistic logic at `statistic/statistic.component.ts`
 #### Use angular `ActivatedRoute` service to get the id from the active router
 **Hint:** you need to `subscribe` to the `ActivatedRoute:params` observable parameters list.
 #### Use `VoteService` to get votes
-**Hint 1:** It is an Observable that contains Observables, you need to subscribe to all.
+**Hint 1:** It is an Observable you need to `subscribe` to it.
 
-**Hint 2:** You need to `map` the data to the appropriate format that plotlyJS requires
+**Hint 2:** You need to process the data to the appropriate format that plotlyJS requires.
 
 **Hint 3:** On updating the model plotlyJs might not detect changes, trigger detection manaully.
 You can use this trick `this.graphData = JSON.parse(JSON.stringify(this.graphData));`
 
 
-### 5.d Create a bar chart that shows the number of votes for each question
+### 5.f Create a bar chart that shows the number of votes for each question
 
 
 ## Feedback: https://goo.gl/forms/PTYOdBNIB0MpSlzu1 
