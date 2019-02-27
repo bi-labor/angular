@@ -79,6 +79,28 @@ ng new bi-angular
 		* `*.spec.ts`  - test files
 
 
+
+
+#### Check if it runs
+`npm start` & open `localhost:<port>` in browser.
+
+
+
+
+### 1.b. Add simple design
+
+#### Add new angular component: Votes
+add it with cli:
+```bash
+ng generate component votes
+```
+creates these files:
+```
+src/app/votes/votes.component.html
+src/app/votes/votes.component.spec.ts
+src/app/votes/votes.component.ts
+src/app/votes/votes.component.css
+```
 #### Add routing
 We will use this later for routing.
 (Routing modul is responsible for parsing the current url and *routing*=rendering the application to the appropriate component)
@@ -99,32 +121,7 @@ export class AppComponent {
 
 ```
 
-#### Check if it runs
-`npm start` & open `localhost:<port>` in browser.
 
-
-### 1.b. Add simple design
-#### Install bootstrap
-You can google for *angular bootstrap* and find a nice npm module.
-Best practice: look for the one that has the most stars at github + has a solid documentation.
-We will use valor-software's ngx-bootstrap:
-```bash
-ng add ngx-bootstrap 
-```
-**note:** this installs and ads to the packege.josn `ngx-bootstrap` and `bootstrap` dependencies
-
-#### Add new angular component: Votes
-add it with cli:
-```bash
-ng generate component votes
-```
-creates these files:
-```
-src/app/votes/votes.component.html
-src/app/votes/votes.component.spec.ts
-src/app/votes/votes.component.ts
-src/app/votes/votes.component.css
-```
 #### Add componenet to router
 Update `app-routing.module.ts`
 ```Typescript
@@ -138,6 +135,16 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 ```
+
+
+#### Install bootstrap
+You can google for *angular bootstrap* and find a nice npm module.
+Best practice: look for the one that has the most stars at github + has a solid documentation.
+We will use valor-software's ngx-bootstrap:
+```bash
+ng add ngx-bootstrap 
+```
+**note:** this installs and ads to the packege.josn `ngx-bootstrap` and `bootstrap` dependencies
 
 
 #### Create a skeleton design for Votes component
@@ -184,6 +191,14 @@ imports:[
 ...
 CollapseModule.forRoot()
 ]
+```
+
+##### Fix design
+Add top margin to body:
+```
+body {
+ margin-top: 100px;
+}
 ```
 
 ## 2. Create Questions
@@ -264,6 +279,15 @@ export interface QuestionEntity extends Question {
   id: string;
 }
 ```
+
+#### `QuestionOption` interface at `model/QuestionOption.ts`
+```Typescript
+export interface QuestionOption {
+  label: string;
+}
+```
+
+
 #### `Vote` interface at `model/Vote.ts`
 ```Typescript
 export interface Vote {
@@ -271,13 +295,6 @@ export interface Vote {
   timeStamp: number;
 }
 
-```
-
-#### `QuestionOption` interface at `model/QuestionOption.ts`
-```Typescript
-export interface QuestionOption {
-  label: string;
-}
 ```
 
 #### Create Create Vote service wtih dummy data
@@ -308,6 +325,14 @@ export class VotesService {
         description: 'I\'m good too..',
         created: Date.now(),
         options: [{label: 'good'}, {label: 'ehh'}]
+      },      
+      {
+        id: '2',
+        photoUrl: '',
+        question: 'How are you again?',
+        description: 'Just cheking...',
+        created: Date.now(),
+        options: [{label: 'good again'}, {label: 'still ehh'}]
       }
     ]);
   }	
@@ -316,16 +341,17 @@ export class VotesService {
     //TODO: implement
   }
 
-  vote(questionId: string, optionLabel: string) {
+  async vote(questionId: string, optionLabel: string) {
     //TODO: implement
   }
 
-  delete(questionId: string) {
+  async delete(questionId: string) {
     //TODO: implement
   }
 
   getVotes(questionId: string): Observable<Vote[]> {  
     //TODO: implement
+    return null;
   }
 }
 
@@ -376,7 +402,7 @@ export class QuestionComponent {
     // TODO: add toast
   }
 
-  deleteQuestion() {
+  async deleteQuestion() {
 	// TODO implement
   }
 
@@ -429,6 +455,19 @@ export class QuestionComponent {
 
 
 ```
+
+### Import angular:FormsModule at `app.module.ts`
+We are using angular forms to disable the voting button if no radio button is selected
+```Typescript
+...
+import:[
+...
+FormsModule,
+ModalModule.forRoot(),
+...
+]
+```
+
 
 #### Add time transformation pipe
 `votes/question/question.component.html` uses now the `timeAgo` pipe to convert the `created` timeStamp to readable string.
@@ -580,12 +619,11 @@ export class VotesComponent {
 }
 ```
 
-#### Import ngx-bootstrap:ModalService and angular:FormsModule at `app.module.ts`
+#### Import ngx-bootstrap:ModalService  at `app.module.ts`
 ```Typescript
 ...
 import:[
 ...
-FormsModule,
 ModalModule.forRoot(),
 ...
 ]
@@ -661,7 +699,7 @@ providers: [
 
 #### Update votes service at `services/votes.service.ts`
 ```Typescript
-
+@Injectable()
 export class VotesService {
 
   questions: Observable<QuestionEntity[]>;
@@ -692,6 +730,14 @@ export class VotesService {
         description: 'I\'m good too..',
         created: Date.now(),
         options: [{label: 'good'}, {label: 'ehh'}]
+      },      
+      {
+        id: '2',
+        photoUrl: '',
+        question: 'How are you again?',
+        description: 'Just cheking...',
+        created: Date.now(),
+        options: [{label: 'good again'}, {label: 'still ehh'}]
       }
     ]);
   }
@@ -705,7 +751,7 @@ export class VotesService {
       .collection<Vote>('votes').add({timeStamp: Date.now(), option: optionLabel});
   }
 
-  delete(questionId: string) {
+  async delete(questionId: string) {
     // TODO implement
     // don not forget to delete the votes subcollection manually
   }
