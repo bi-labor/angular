@@ -4,7 +4,7 @@
 **Feedback:** https://goo.gl/forms/PTYOdBNIB0MpSlzu1 
 
 
-![Application](assests/main.jpg)
+![Application](assets/main.jpg)
 
 ## Table of contents
 - [0. Introduction](#0-introduction)
@@ -106,8 +106,8 @@ src/app/votes/votes.component.css
 #### Add routing
 Routing helps us to navigate betwwen screens like:
 Between the voting screen and the statistic screen:
-![Votes route](assests/votes_navigation.jpg)
-![Statistic route](assests/statistic_navigation.jpg)
+![Votes route](assets/votes_navigation.jpg)
+![Statistic route](assets/statistic_navigation.jpg)
 (Routing modul is responsible for parsing the current url and *routing*=rendering the application to the appropriate component)
 ```bash
 ng generate module app-routing --flat --module=app
@@ -515,7 +515,7 @@ TimeAgoPipe
 ### 2.d add new Question form
 
 #### Add modal to `votes/votes.component.html`
-![Modal](assests/modal.jpg)
+![Modal](assets/modal.jpg)
 
 You can use a form generator to creat bootstrap 4 forms: https://bootstrapformbuilder.com/
 ```HTML
@@ -795,7 +795,7 @@ export class VotesService {
 **Hint:** Query the firestore document that has the id `questionId` and delete it.
 
 ## 4. Add Notifications
-![Notification](assests/notification.jpg)
+![Notification](assets/notification.jpg)
 ### 4.a Add notifications module
 
 #### install and save to `package.json`
@@ -846,7 +846,7 @@ const routes: Routes = [
 ```
 
 ### 5.d Design the `statistic` component 
-![Notification](assests/statistic.jpg)
+![Notification](assets/statistic.jpg)
 #### Use  [navigation](https://getbootstrap.com/docs/4.0/components/navbar/) bar 
 #### Crate a [bootstrap card](https://getbootstrap.com/docs/4.0/components/card/) for your plot
 
