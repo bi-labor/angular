@@ -7,7 +7,8 @@
 ## Table of contents
 - [0. Introduction](#0-introduction)
   * [0.a Used technologies](#0a-used-technologies)
-  * [0.b Typescript](#0b-typescript)
+  * [0.b Typescript 101](#0b-typescript-101)
+  * [0.c Angular 101](#0c-angular-101)
 - [1. Create project sceleton](#1-create-project-sceleton)
   * [1.a. Create a new project](#1a-create-a-new-project)
   * [1.b. Add simple design](#1b-add-simple-design)
@@ -47,8 +48,8 @@
  * ngx-toaster for notifications
  * ploty.js for graph plotting
 
-### [Typescript 101](typescript_101.md)
-### [Angular 101](angular_101.md)
+### 0.b [Typescript 101](typescript_101.md)
+### 0.c [Angular 101](angular_101.md)
  
 ## 1. Create project sceleton
 
@@ -56,7 +57,7 @@
 
 #### Install angular cli
 ```bash
-node install @angular/cli -g
+npm install @angular/cli -g
 ```
 #### Create new project
 ```bash
@@ -78,6 +79,28 @@ ng new bi-angular
 		* `*.spec.ts`  - test files
 
 
+
+
+#### Check if it runs
+`npm start` & open `localhost:<port>` in browser.
+
+
+
+
+### 1.b. Add simple design
+
+#### Add new angular component: Votes
+add it with cli:
+```bash
+ng generate component votes
+```
+creates these files:
+```
+src/app/votes/votes.component.html
+src/app/votes/votes.component.spec.ts
+src/app/votes/votes.component.ts
+src/app/votes/votes.component.css
+```
 #### Add routing
 We will use this later for routing.
 (Routing modul is responsible for parsing the current url and *routing*=rendering the application to the appropriate component)
@@ -98,32 +121,7 @@ export class AppComponent {
 
 ```
 
-#### Check if it runs
-`npm start` & open `localhost:<port>` in browser.
 
-
-### 1.b. Add simple design
-#### Install bootstrap
-You can google for *angular bootstrap* and find a nice npm module.
-Best practice: look for the one that has the most stars at github + has a solid documentation.
-We will use valor-software's ngx-bootstrap:
-```bash
-ng add ngx-bootstrap 
-```
-**note:** this installs and ads to the packege.josn `ngx-bootstrap` and `bootstrap` dependencies
-
-#### Add new angular component: Votes
-add it with cli:
-```bash
-ng generate component votes
-```
-creates these files:
-```
-src/app/votes/votes.component.html
-src/app/votes/votes.component.spec.ts
-src/app/votes/votes.component.ts
-src/app/votes/votes.component.css
-```
 #### Add componenet to router
 Update `app-routing.module.ts`
 ```Typescript
@@ -137,6 +135,16 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 ```
+
+
+#### Install bootstrap
+You can google for *angular bootstrap* and find a nice npm module.
+Best practice: look for the one that has the most stars at github + has a solid documentation.
+We will use valor-software's ngx-bootstrap:
+```bash
+ng add ngx-bootstrap 
+```
+**note:** this installs and ads to the packege.josn `ngx-bootstrap` and `bootstrap` dependencies
 
 
 #### Create a skeleton design for Votes component
@@ -183,6 +191,14 @@ imports:[
 ...
 CollapseModule.forRoot()
 ]
+```
+
+##### Fix design
+Add top margin to body:
+```
+body {
+ margin-top: 100px;
+}
 ```
 
 ## 2. Create Questions
@@ -263,6 +279,15 @@ export interface QuestionEntity extends Question {
   id: string;
 }
 ```
+
+#### `QuestionOption` interface at `model/QuestionOption.ts`
+```Typescript
+export interface QuestionOption {
+  label: string;
+}
+```
+
+
 #### `Vote` interface at `model/Vote.ts`
 ```Typescript
 export interface Vote {
@@ -270,13 +295,6 @@ export interface Vote {
   timeStamp: number;
 }
 
-```
-
-#### `QuestionOption` interface at `model/QuestionOption.ts`
-```Typescript
-export interface QuestionOption {
-  label: string;
-}
 ```
 
 #### Create Create Vote service wtih dummy data
@@ -307,6 +325,14 @@ export class VotesService {
         description: 'I\'m good too..',
         created: Date.now(),
         options: [{label: 'good'}, {label: 'ehh'}]
+      },      
+      {
+        id: '2',
+        photoUrl: '',
+        question: 'How are you again?',
+        description: 'Just cheking...',
+        created: Date.now(),
+        options: [{label: 'good again'}, {label: 'still ehh'}]
       }
     ]);
   }	
@@ -315,16 +341,17 @@ export class VotesService {
     //TODO: implement
   }
 
-  vote(questionId: string, optionLabel: string) {
+  async vote(questionId: string, optionLabel: string) {
     //TODO: implement
   }
 
-  delete(questionId: string) {
+  async delete(questionId: string) {
     //TODO: implement
   }
 
   getVotes(questionId: string): Observable<Vote[]> {  
     //TODO: implement
+    return null;
   }
 }
 
@@ -367,11 +394,15 @@ export class QuestionComponent {
   constructor(private votesService: VotesService) {
   }
 
-  vote() {
-	// TODO implement
+  async vote() {
+    if (!this.selected) {
+      return;
+    }
+    await this.votesService.vote(this.question.id, this.selected);
+    // TODO: add toast
   }
 
-  deleteQuestion() {
+  async deleteQuestion() {
 	// TODO implement
   }
 
@@ -424,6 +455,19 @@ export class QuestionComponent {
 
 
 ```
+
+### Import angular:FormsModule at `app.module.ts`
+We are using angular forms to disable the voting button if no radio button is selected
+```Typescript
+...
+import:[
+...
+FormsModule,
+ModalModule.forRoot(),
+...
+]
+```
+
 
 #### Add time transformation pipe
 `votes/question/question.component.html` uses now the `timeAgo` pipe to convert the `created` timeStamp to readable string.
@@ -500,7 +544,7 @@ You can use a form generator to creat bootstrap 4 forms: https://bootstrapformbu
         </div>
       </div>
 
-      <div class="form-group row" *ngFor="let option of options; let i = index">
+      <div class="form-group row" *ngFor="let option of question.options; let i = index">
         <label for="description" class="col-2 offset-3 col-form-label">{{i + 1}}.</label>
         <div class="col-7">
           <input [(ngModel)]="option.label"
@@ -559,7 +603,6 @@ export class VotesComponent {
       description: '',
       options: []
     };
-    this.options = [];
     this.addOption();
     this.addOption();
     this.modalRef = this.modalService.show(template);
@@ -567,7 +610,7 @@ export class VotesComponent {
 
   async addQuestion() {
     this.modalRef.hide();
-    await this.votesService.addQuestion(this.question, this.options);
+    await this.votesService.addQuestion(this.question);
   }
 
   addOption() {
@@ -576,12 +619,11 @@ export class VotesComponent {
 }
 ```
 
-#### Import ngx-bootstrap:ModalService and angular:FormsModule at `app.module.ts`
+#### Import ngx-bootstrap:ModalService  at `app.module.ts`
 ```Typescript
 ...
 import:[
 ...
-FormsModule,
 ModalModule.forRoot(),
 ...
 ]
@@ -657,7 +699,7 @@ providers: [
 
 #### Update votes service at `services/votes.service.ts`
 ```Typescript
-
+@Injectable()
 export class VotesService {
 
   questions: Observable<QuestionEntity[]>;
@@ -688,6 +730,14 @@ export class VotesService {
         description: 'I\'m good too..',
         created: Date.now(),
         options: [{label: 'good'}, {label: 'ehh'}]
+      },      
+      {
+        id: '2',
+        photoUrl: '',
+        question: 'How are you again?',
+        description: 'Just cheking...',
+        created: Date.now(),
+        options: [{label: 'good again'}, {label: 'still ehh'}]
       }
     ]);
   }
@@ -696,12 +746,12 @@ export class VotesService {
     await this.questionCollection.add(q);
   }
 
-  vote(questionId: string, optionLabel: string) {
-    this.questionCollection.doc(questionId)
-      .collection<Vote>('votes').add({timeStamp: Date.now(), option: optionLabel}).catch(console.error);
+  async vote(questionId: string, optionLabel: string) {
+    await this.questionCollection.doc(questionId)
+      .collection<Vote>('votes').add({timeStamp: Date.now(), option: optionLabel});
   }
 
-  delete(questionId: string) {
+  async delete(questionId: string) {
     // TODO implement
     // don not forget to delete the votes subcollection manually
   }
@@ -717,16 +767,17 @@ export class VotesService {
 
 ## 3. Implement Question deletion
 
-#### 3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.ts`
+#### 3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.html`
 ```HTML
 	<div class="row">
       <div class="col-8">
         <p class="card-text">{{question.description}}</p>
       </div>
 	  --------Copy between these----------
-      <div class="col-4">
+       <div class="col-4">
         <button type="button" (click)="deleteQuestion()" class="btn btn-outline-danger float-right">Delete</button>
         <a  [routerLink]="['/statistic', question.id]"
+           class="btn btn-outline-primary float-right mr-2 ml-2">Statistic</a>
       </div>
 	  --------Copy between these----------
     </div>
@@ -748,9 +799,10 @@ npm install ngx-toastr --save
 npm install @angular/animations --save
 ```
 #### Add toaster module to `app.module.ts`
+#### Also add the toaster stylesheet to `angular.json`, read more at:https://github.com/scttcper/ngx-toastr
 
 #### **Note:** there is a current minor issue with the lib as the css style interfears with bootstrap
-Read more here: https://github.com/scttcper/ngx-toastr/issues/602*/
+Read more here: https://github.com/scttcper/ngx-toastr/issues/602
 #### Sollution
 Add this to `styles.css`
 ```css
