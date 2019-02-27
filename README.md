@@ -106,8 +106,11 @@ src/app/votes/votes.component.css
 #### Add routing
 Routing helps us to navigate betwwen screens like:
 Between the voting screen and the statistic screen:
+
 ![Votes route](assets/votes_navigation.jpg)
+
 ![Statistic route](assets/statistic_navigation.jpg)
+
 (Routing modul is responsible for parsing the current url and *routing*=rendering the application to the appropriate component)
 ```bash
 ng generate module app-routing --flat --module=app
