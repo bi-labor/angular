@@ -1,7 +1,7 @@
 # Typescript 101
 Typescript is a typed subset of JavaScript that compiles to plain JavaScript
 
-### simple types
+### Simple types
 ```Typescript
 let a:number = 5;
 let b:string = 'a simple text'; // you can also use const too
@@ -17,7 +17,7 @@ let fruit:fruit_string = 'apple';
 // Const is also allowed
 const day:string = 'Monday'; 
 ```
-**note:** Explicit types are used here. It's not necessary since compiler can figure out.
+**Note:** Explicit types are used here. It's not necessary since compiler can figure out.
 
 ### Interfaces and classes
 ```Typescript
@@ -38,17 +38,15 @@ class Dog implements Pet{
 		console.log('--bark--bark--');
 	}
 }
-
+```
 
 ### Enums
-
 ```Typescript
 enum Colors{
 red = 1, blue, green
 }
 ```
 
-```
 ### Templates
 ```Typescript
 class Storage<T>{
@@ -60,7 +58,7 @@ class Storage<T>{
 ```
 
 ### Async await
-To hide and flatten Promices
+To hide and flatten promises
 ```Typescript
 longCalculagtion(num:number):Promise<number>{
 	return new Promise((resolve,reject)=>{
