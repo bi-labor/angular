@@ -1,4 +1,4 @@
-# Angular Voting Applicatoin
+# Angular Voting Application
 
 **Demo:** https://bi-labor.github.io/angular
 **Feedback:** https://goo.gl/forms/PTYOdBNIB0MpSlzu1 
@@ -15,10 +15,10 @@
   * [1.a. Create a new project](#1a-create-a-new-project)
   * [1.b. Add simple design](#1b-add-simple-design)
 - [2. Create Questions](#2-create-questions)
-  * [2.a create questoin design](#2a-create-questoin-design)
-  * [2.b create Model](#2b-create-model)
+  * [2.a Create question design](#2a-create-question-design)
+  * [2.b Create Model](#2b-create-model)
   * [2.c Fill UI with data binding](#2c-fill-ui-with-data-binding)
-  * [2.d add new Question form](#2d-add-new-question-form)
+  * [2.d Add new Question form](#2d-add-new-question-form)
   * [2.e Add Firebase](#2e-add-firebase)
 - [3. Implement Question deletion](#3-implement-question-deletion)
     + [3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.ts`](#3a-add-delete-button-to-every-question-in-the-same-line-with-the-description-at-votes-question-questioncomponenetts)
@@ -29,7 +29,7 @@
   * [4.b Add toasts](#4b-add-toasts)
 - [5. Add Statistics](#5-add-statistics)
   * [5.a Add plotly to the project](#5a-add-plotly-to-the-project)
-  * [5.b add it to the app module](#5b-add-it-to-the-app-module)
+  * [5.b Add it to the app module](#5b-add-it-to-the-app-module)
   * [5.c Create a new `statistic` component](#5c-create-a-new-statistic-component)
   * [5.d Design the statistic component](5d-design-the-statistic-component)
   * [5.e Create statistic logic at `statistic/statistic.component.ts`](#5e-create-statistic-logic-at-statisticstatisticcomponentts)
@@ -44,10 +44,10 @@
  * Angular
 	* with angular-cli
  * RxJS (part of Angular)
- * bootstrap (ngx-bootstrap)
- * firabase
+ * Bootstrap (ngx-bootstrap)
+ * Firabase
 	* with firestore repository
- * ngx-toaster for notifications
+ * ngx-toastr for notifications
  * ploty.js for graph plotting
 
 ### 0.b [Typescript 101](typescript_101.md)
@@ -65,7 +65,7 @@ npm install @angular/cli -g
 ```bash
 ng new bi-angular
 ```
-**note:** It takes a while, because of it also installs the *node_modules*
+**Note:** It takes a while, because of it also installs the *node_modules*
 
 #### Inspect the created project
   * `package.json` - contains the required npm modules and start up scripts
@@ -76,7 +76,7 @@ ng new bi-angular
   * src/
 	* `index.html` - start up page, conatins angular `app-root`, the app entry point
 	* app/
-		* `app.module.ts` - list all included modules, components, pipes, services, etc..
+		* `app.module.ts` - list all included modules, components, pipes, services, etc.
 		* `app.component.ts`  - entry component: later it will only contain a router outlet
 		* `*.spec.ts`  - test files
 
@@ -92,11 +92,11 @@ ng new bi-angular
 ### 1.b. Add simple design
 
 #### Add new angular component: Votes
-add it with cli:
+Add it with cli:
 ```bash
 ng generate component votes
 ```
-creates these files:
+Creates these files:
 ```
 src/app/votes/votes.component.html
 src/app/votes/votes.component.spec.ts
@@ -104,14 +104,15 @@ src/app/votes/votes.component.ts
 src/app/votes/votes.component.css
 ```
 #### Add routing
-Routing helps us to navigate betwwen screens like:
+Routing helps us to navigate between screens like:
+
 Between the voting screen and the statistic screen:
 
 ![Votes route](assets/votes_navigation.jpg)
 
 ![Statistic route](assets/statistic_navigation.jpg)
 
-(Routing modul is responsible for parsing the current url and *routing*=rendering the application to the appropriate component)
+_(Routing modul is responsible for parsing the current url and *routing*=rendering the application to the appropriate component)_
 ```bash
 ng generate module app-routing --flat --module=app
 ```
@@ -152,7 +153,7 @@ We will use valor-software's ngx-bootstrap:
 ```bash
 ng add ngx-bootstrap 
 ```
-**note:** this installs and ads to the packege.josn `ngx-bootstrap` and `bootstrap` dependencies
+**Note:** This installs and adds to the package.json `ngx-bootstrap` and `bootstrap` dependencies
 
 
 #### Create a skeleton design for Votes component
@@ -211,7 +212,7 @@ body {
 
 ## 2. Create Questions
 
-### 2.a create questoin design
+### 2.a Create question design
 #### Create new `question` component
 ```bash
 ng generate component votes/question
@@ -272,7 +273,7 @@ ng generate component votes/question
 
 ```
 
-### 2.b create Model
+### 2.b Create Model
 #### `Question` interface at `model/Question.ts`
 ```Typescript
 export interface Question {
@@ -305,13 +306,15 @@ export interface Vote {
 
 ```
 
-#### Create Create Vote service wtih dummy data
-(you can use cli too:
+#### Create Vote service with dummy data
+_You can use cli too:_
 ```bash
 ng generate s votes
 ```
-)
-But do it manually this time: Creat a new file at `services/vote.service.ts`
+
+But do it manually this time:
+
+Create a new file at `services/vote.service.ts`
 
 ```Typescript
 
@@ -364,7 +367,7 @@ export class VotesService {
 }
 
 ```
-**note:** don't forget to add it to the app module at `app.module.ts`
+**Note:** Don't forget to add it to the app module at `app.module.ts`
 ```Typescript
 ...
 providers:[
@@ -390,10 +393,10 @@ export class VotesComponent {
                 *ngFor="let question of votesService.questions | async"></app-question>
 </main><!-- /.container -->
 ```
-**Note:** we are using the `async` pipe, since `votesService.questions` is an`Observervable<QuestionEntity>` type.
+**Note:** We are using the `async` pipe, since `votesService.questions` is an `Observervable<QuestionEntity>` type.
 
 #### Update `votes/question/question.component.ts`
-Add `question` as an imput paremater of the component.
+Add `question` as an input paremater of the component.
 ```Typescript
 export class QuestionComponent {
 
@@ -508,19 +511,19 @@ export class TimeAgoPipe implements PipeTransform {
 }
 
 ```
-**Note:** don't forget to add it to the app module at `app.module.ts`
+**Note:** Don't forget to add it to the app module at `app.module.ts`
 ```Typescript
 declarations:[
 TimeAgoPipe
 ]
 ```
 
-### 2.d add new Question form
+### 2.d Add new Question form
 
 #### Add modal to `votes/votes.component.html`
 ![Modal](assets/modal.jpg)
 
-You can use a form generator to creat bootstrap 4 forms: https://bootstrapformbuilder.com/
+You can use a form generator to create bootstrap 4 forms: https://bootstrapformbuilder.com/
 ```HTML
 <ng-template #addVoteTemplate>
   <div class="modal-header">
@@ -645,7 +648,7 @@ ModalModule.forRoot(),
 #### Data stucure
 
 ```
-- questoins:collection
+- questions:collection
 |--- id:string
 |--- question:string
 |--- photoUrl:string
@@ -801,18 +804,18 @@ export class VotesService {
 ![Notification](assets/notification.jpg)
 ### 4.a Add notifications module
 
-#### install and save to `package.json`
-We are using ngx-toaster: https://github.com/scttcper/ngx-toastr
+#### Install and save to `package.json`
+We are using ngx-toastr: https://github.com/scttcper/ngx-toastr
 ```bash
 npm install ngx-toastr --save
 npm install @angular/animations --save
 ```
 #### Add toaster module to `app.module.ts`
-#### Also add the toaster stylesheet to `angular.json`, read more at:https://github.com/scttcper/ngx-toastr
+#### Also add the toaster stylesheet to `angular.json`, read more at: https://github.com/scttcper/ngx-toastr
 
-#### **Note:** there is a current minor issue with the lib as the css style interfears with bootstrap
+#### **Note:** There is a current minor issue with the lib as the css style interfears with bootstrap
 Read more here: https://github.com/scttcper/ngx-toastr/issues/602
-#### Sollution
+#### Solution
 Add this to `styles.css`
 ```css
 #toast-container > div {
@@ -833,13 +836,13 @@ We are using angular-ploty: https://github.com/plotly/angular-plotly.js/blob/mas
 ```bash
  npm install angular-plotly.js plotly.js --save
 ```
-### 5.b add it to the app module
+### 5.b Add it to the app module
 ### 5.c Create a new `statistic` component 
-#### generate it
+#### Generate it
 ```bash
 ng g c statistic
 ```
-#### add it to the routing so that it has an id parameter
+#### Add it to the routing so that it has an id parameter
 ```Typescript
 const routes: Routes = [
   { path: '', redirectTo: '/votes', pathMatch: 'full' },
@@ -855,7 +858,7 @@ const routes: Routes = [
 
 ### 5.e Create statistic logic at `statistic/statistic.component.ts`
 #### Use angular `ActivatedRoute` service to get the id from the active router
-**Hint:** you need to `subscribe` to the `ActivatedRoute:params` observable parameters list.
+**Hint:** You need to `subscribe` to the `ActivatedRoute:params` observable parameters list.
 #### Use `VoteService` to get votes
 **Hint 1:** It is an Observable you need to `subscribe` to it.
 
