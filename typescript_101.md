@@ -4,7 +4,7 @@ Typescript is a typed subset of JavaScript that compiles to plain JavaScript
 ### Simple types
 ```Typescript
 let a:number = 5;
-let b:string = 'a simple text'; // you can also use const too
+let b:string = 'a simple text'; 
 let c:Date = new Date();
 let d:any = 6;
 let e:number[] = [1,2,4];
@@ -29,13 +29,13 @@ interface Pet extends Animal{
 	name:string;
 }
 
-class Dog implements Pet{
+class Dog implements Pet {
 	legs = 4;
-	constructor(public name:string){
-		
+	constructor(public name:string){ //name will be a member of Dog
+	  	
 	}
 	speak(){
-		console.log('--bark--bark--');
+	   console.log(this.name, '--bark--bark--'); //name is a member
 	}
 }
 ```
