@@ -202,13 +202,6 @@ CollapseModule.forRoot()
 ]
 ```
 
-##### Fix design
-Add top margin to body:
-```
-body {
- margin-top: 100px;
-}
-```
 
 ## 2. Create Questions
 
@@ -271,6 +264,14 @@ ng generate component votes/question
   <app-question></app-question>
 </main><!-- /.container -->
 
+```
+
+##### Fix design
+Add top margin to body:
+```
+body {
+ margin-top: 100px;
+}
 ```
 
 ### 2.b Create Model
@@ -473,8 +474,7 @@ We are using angular forms to disable the voting button if no radio button is se
 ...
 import:[
 ...
-FormsModule,
-ModalModule.forRoot(),
+FormsModule
 ...
 ]
 ```
