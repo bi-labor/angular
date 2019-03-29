@@ -765,7 +765,7 @@ export class VotesService {
 
   async delete(questionId: string) {
     // TODO: implement
-    // don not forget to delete the votes subcollection manually
+    // do not forget to delete the votes subcollection manually
   }
 
 
