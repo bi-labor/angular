@@ -45,7 +45,7 @@
 	* with angular-cli
  * RxJS (part of Angular)
  * Bootstrap (ngx-bootstrap)
- * Firabase
+ * Firebase
 	* with firestore repository
  * ngx-toastr for notifications
  * ploty.js for graph plotting
@@ -350,19 +350,19 @@ export class VotesService {
   }	
 	
   async addQuestion(q: Question) {
-    //TODO: implement
+    // TODO: implement
   }
 
   async vote(questionId: string, optionLabel: string) {
-    //TODO: implement
+    // TODO: implement
   }
 
   async delete(questionId: string) {
-    //TODO: implement
+    // TODO: implement
   }
 
   getVotes(questionId: string): Observable<Vote[]> {  
-    //TODO: implement
+    // TODO: implement
     return null;
   }
 }
@@ -415,7 +415,7 @@ export class QuestionComponent {
   }
 
   async deleteQuestion() {
-	// TODO implement
+	// TODO: implement
   }
 
 }
@@ -484,7 +484,7 @@ FormsModule
 `votes/question/question.component.html` uses now the `timeAgo` pipe to convert the `created` timeStamp to readable string.
 It is not a built in pipe, we need to implement it:
 
-Create new pipe at `pipes/TimaAgoPipe.ts`
+Create new pipe at `pipes/TimeAgoPipe.ts`
 ```Typescript
 @Pipe({
   name: 'timeAgo',
@@ -764,8 +764,8 @@ export class VotesService {
   }
 
   async delete(questionId: string) {
-    // TODO implement
-    // don not forget to delete the votes subcollection manually
+    // TODO: implement
+    // do not forget to delete the votes subcollection manually
   }
 
 
