@@ -401,6 +401,7 @@ Add `question` as an input paremater of the component.
 ```Typescript
 export class QuestionComponent {
 
+  selected : String;
   @Input() question: QuestionEntity;
 
   constructor(private votesService: VotesService) {
@@ -606,7 +607,7 @@ export class VotesComponent {
               private modalService: BsModalService) {
   }
 
-  openModal(template: HTMLElement) {
+  openModal(template: TemplateRef<any>) {
 
      this.question = {
       question: '',
