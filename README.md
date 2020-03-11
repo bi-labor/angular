@@ -401,7 +401,7 @@ Add `question` as an input paremater of the component.
 ```Typescript
 export class QuestionComponent {
 
-  selected : String;
+  selected: string;
   @Input() question: QuestionEntity;
 
   constructor(private votesService: VotesService) {
