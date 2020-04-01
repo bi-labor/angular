@@ -36,6 +36,7 @@
   * [5.f Create a bar chart that shows the number of votes for each question](5f-create-a-bar-chart-that-shows-the-number-of-votes-for-each-question)
 
 ## 0. Introduction
+At the end of the guide, please upload the resulting code (without the node_modules folder) in a zip file to the AUT portal.
 
 
 ### 0.a Used technologies
