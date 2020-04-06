@@ -703,14 +703,6 @@ imports: [
 ]
 ```
 
-#### There is a current issue with the default settings of firebase in angularfire2, work around:
-Read more: https://github.com/angular/angularfire2/issues/1993#issuecomment-455830987
-```Typescript
-providers: [
- {provide: FirestoreSettingsToken, useValue: {}}
-]
-```
-
 #### Update votes service at `services/votes.service.ts`
 ```Typescript
 @Injectable()
