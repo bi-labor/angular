@@ -54,9 +54,13 @@ At the end of the guide, please upload the resulting code (without the node_modu
 ### 0.b [Typescript 101](typescript_101.md)
 ### 0.c [Angular 101](angular_101.md)
  
-## 1. Create project sceleton
+### 0.d Requirements
+* Download and install the latest LTS versino of NodeJS from https://nodejs.org/en/
+ 
+## 1. Create project skeleton
 
 ### 1.a. Create a new project
+Open a Terminal / Command Prompt, and type in the following commands.
 
 #### Install angular cli
 ```bash
@@ -66,6 +70,11 @@ npm install @angular/cli -g
 ```bash
 ng new bi-angular
 ```
+
+- If asked about the enforcement of strict tpye checking, answer No.
+- Don't add routing.
+- Use CSS
+
 **Note:** It takes a while, because of it also installs the *node_modules*
 
 #### Inspect the created project
@@ -133,8 +142,14 @@ export class AppComponent {
 
 
 #### Add componenet to router
-Update `app-routing.module.ts`
+Update `app-routing.module.ts` to look like this:
+
 ```Typescript
+import { NgModule } from '@angular/core';
+import {VotesComponent} from './votes/votes.component';
+import {RouterModule, Routes} from '@angular/router';
+
+
 const routes: Routes = [
   {path: '', redirectTo: '/votes', pathMatch: 'full'},
   {path: 'votes', component: VotesComponent}
@@ -144,6 +159,8 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+export class AppRoutingModule { }
+
 ```
 
 
@@ -152,7 +169,7 @@ You can google for *angular bootstrap* and find a nice npm module.
 Best practice: look for the one that has the most stars at github + has a solid documentation.
 We will use valor-software's ngx-bootstrap:
 ```bash
-ng add ngx-bootstrap 
+ng add @ng-bootstrap/ng-bootstrap
 ```
 **Note:** This installs and adds to the package.json `ngx-bootstrap` and `bootstrap` dependencies
 
@@ -190,17 +207,69 @@ Add navigator and main container to `votes.component.html`:
 </main><!-- /.container -->
 
 ```
-##### Add `isCollapsed` to  `votes/votes.component.ts`
+##### Add `isCollapsed` to  `votes/votes.component.ts` as a member field
+
 ```Typescript
   isCollapsed = true;
 ```
 
 ##### Add `CollapseModule` to `app.module.ts`
 ```Typescript
+
+import {CollapseModule} from 'ngx-bootstrap/collapse';
+
+...
+
 imports:[
 ...
 CollapseModule.forRoot()
 ]
+```
+
+##### Add `BrowserAnimationsModule` to `app.module.ts`
+```Typescript
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+...
+
+imports:[
+...
+    BrowserAnimationsModule,
+]
+```
+
+Your final app.module.ts should look like this:
+```Typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { AppComponent } from './app.component';
+import { VotesComponent } from './votes/votes.component';
+import { AppRoutingModule } from './app-routing.module';
+import {CollapseModule} from 'ngx-bootstrap/collapse';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    VotesComponent
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    CollapseModule.forRoot(),
+    NgbModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
 ```
 
 
@@ -267,8 +336,8 @@ ng generate component votes/question
 
 ```
 
-##### Fix design
-Add top margin to body:
+##### Fix the design
+Add a top margin to body (src/styles.css), this will seperate the content from the navbar.
 ```
 body {
  margin-top: 100px;
@@ -276,8 +345,17 @@ body {
 ```
 
 ### 2.b Create Model
-#### `Question` interface at `model/Question.ts`
+#### `QuestionOption` interface at `src/app/model/QuestionOption.ts`
 ```Typescript
+export interface QuestionOption {
+  label: string;
+}
+```
+
+#### `Question` interface at `src/app/model/Question.ts`
+```Typescript
+import {QuestionOption} from './QuestionOption';
+
 export interface Question {
   photoUrl?: string;
   question: string;
@@ -291,40 +369,34 @@ export interface QuestionEntity extends Question {
 }
 ```
 
-#### `QuestionOption` interface at `model/QuestionOption.ts`
-```Typescript
-export interface QuestionOption {
-  label: string;
-}
-```
-
-
-#### `Vote` interface at `model/Vote.ts`
+#### `Vote` interface at `src/app/model/Vote.ts`
 ```Typescript
 export interface Vote {
   option: string;
   timeStamp: number;
 }
-
 ```
 
 #### Create Vote service with dummy data
-_You can use cli too:_
+_You can use cli:_
 ```bash
 ng generate s votes
 ```
 
-But do it manually this time:
-
-Create a new file at `services/vote.service.ts`
+Or create manuall in a new file at `services/vote.service.ts`
 
 ```Typescript
+
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Question, QuestionEntity} from './model/Question';
+import {Vote} from './model/Vote';
 
 @Injectable()
 export class VotesService {
 
   questions: Observable<QuestionEntity[]>;
- 
+
   constructor() {
     this.questions = this.getDummyQuestions();
   }
@@ -338,7 +410,7 @@ export class VotesService {
         description: 'I\'m good too..',
         created: Date.now(),
         options: [{label: 'good'}, {label: 'ehh'}]
-      },      
+      },
       {
         id: '2',
         photoUrl: '',
@@ -348,8 +420,8 @@ export class VotesService {
         options: [{label: 'good again'}, {label: 'still ehh'}]
       }
     ]);
-  }	
-	
+  }
+
   async addQuestion(q: Question) {
     // TODO: implement
   }
@@ -362,7 +434,7 @@ export class VotesService {
     // TODO: implement
   }
 
-  getVotes(questionId: string): Observable<Vote[]> {  
+  getVotes(questionId: string): Observable<Vote[]> {
     // TODO: implement
     return null;
   }
@@ -371,6 +443,7 @@ export class VotesService {
 ```
 **Note:** Don't forget to add it to the app module at `app.module.ts`
 ```Typescript
+import {VotesService} from './votes.service';
 ...
 providers:[
 ...
@@ -398,8 +471,18 @@ export class VotesComponent {
 **Note:** We are using the `async` pipe, since `votesService.questions` is an `Observervable<QuestionEntity>` type.
 
 #### Update `votes/question/question.component.ts`
-Add `question` as an input paremater of the component.
+Add `question` as an input parameter of the component.
+
 ```Typescript
+import {Component, Input, OnInit} from '@angular/core';
+import {QuestionEntity} from '../../model/Question';
+import {VotesService} from '../../votes.service';
+
+@Component({
+  selector: 'app-question',
+  templateUrl: './question.component.html',
+  styleUrls: ['./question.component.css']
+})
 export class QuestionComponent {
 
   selected: string;
@@ -417,7 +500,7 @@ export class QuestionComponent {
   }
 
   async deleteQuestion() {
-	// TODO: implement
+    // TODO: implement
   }
 
 }
@@ -473,6 +556,7 @@ export class QuestionComponent {
 ### Import angular:FormsModule at `app.module.ts`
 We are using angular forms to disable the voting button if no radio button is selected
 ```Typescript
+import {FormsModule} from '@angular/forms';
 ...
 import:[
 ...
@@ -486,8 +570,10 @@ FormsModule
 `votes/question/question.component.html` uses now the `timeAgo` pipe to convert the `created` timeStamp to readable string.
 It is not a built in pipe, we need to implement it:
 
-Create new pipe at `pipes/TimeAgoPipe.ts`
+Create new pipe at `srcm/app/pipes/TimeAgoPipe.ts`
 ```Typescript
+import {Pipe, PipeTransform} from '@angular/core';
+
 @Pipe({
   name: 'timeAgo',
   pure: false
@@ -511,10 +597,11 @@ export class TimeAgoPipe implements PipeTransform {
   }
 
 }
-
 ```
 **Note:** Don't forget to add it to the app module at `app.module.ts`
 ```Typescript
+import {TimeAgoPipe} from './pipes/TimeAgoPipe';
+...
 declarations:[
 TimeAgoPipe
 ]
@@ -522,7 +609,7 @@ TimeAgoPipe
 
 ### 2.d Add new Question form
 
-#### Add modal to `votes/votes.component.html`
+#### Add a modal to `votes/votes.component.html` (insert this at the end of the file)
 ![Modal](assets/modal.jpg)
 
 You can use a form generator to create bootstrap 4 forms: https://bootstrapformbuilder.com/
@@ -598,6 +685,16 @@ Add click listener to the `new Question` button at `votes/votes.component.html`
  * Create a model opener function, like: https://valor-software.com/ngx-bootstrap/#/modals
 
 ```Typescript
+import {Component, TemplateRef} from '@angular/core';
+import {VotesService} from '../votes.service';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
+import {Question} from '../model/Question';
+
+@Component({
+  selector: 'app-votes',
+  templateUrl: './votes.component.html',
+  styleUrls: ['./votes.component.css']
+})
 export class VotesComponent {
 
   modalRef: BsModalRef;
@@ -610,7 +707,7 @@ export class VotesComponent {
 
   openModal(template: TemplateRef<any>) {
 
-     this.question = {
+    this.question = {
       question: '',
       created: Date.now(),
       photoUrl: '',
@@ -631,10 +728,12 @@ export class VotesComponent {
     this.question.options.push({label: ''});
   }
 }
+
 ```
 
 #### Import ngx-bootstrap:ModalService  at `app.module.ts`
 ```Typescript
+import {ModalModule} from 'ngx-bootstrap/modal';
 ...
 import:[
 ...
@@ -697,7 +796,12 @@ Alternative you can also you this settings:
 
 #### Add firebase to `app.module.ts`
 ```Typescript
+import {AngularFireModule} from '@angular/fire';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {environment} from '../environments/environment';
+...
 imports: [
+...
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule
 ]
@@ -705,6 +809,13 @@ imports: [
 
 #### Update votes service at `services/votes.service.ts`
 ```Typescript
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Question, QuestionEntity} from './model/Question';
+import {Vote} from './model/Vote';
+import {AngularFirestore, AngularFirestoreCollection, DocumentChangeAction} from '@angular/fire/firestore';
+import {map} from 'rxjs/operators';
+
 @Injectable()
 export class VotesService {
 
@@ -713,7 +824,7 @@ export class VotesService {
   private questionCollection: AngularFirestoreCollection<Question>;
 
   constructor(private afs: AngularFirestore) {
-     this.questionCollection = afs.collection<Question>('questions',
+    this.questionCollection = afs.collection<Question>('questions',
       ref => ref.orderBy('created', 'desc').limit(50));
 
     this.questions = <any>this.questionCollection.snapshotChanges().pipe(
@@ -736,7 +847,7 @@ export class VotesService {
         description: 'I\'m good too..',
         created: Date.now(),
         options: [{label: 'good'}, {label: 'ehh'}]
-      },      
+      },
       {
         id: '2',
         photoUrl: '',
@@ -747,7 +858,7 @@ export class VotesService {
       }
     ]);
   }
- 
+
   async addQuestion(q: Question) {
     await this.questionCollection.add(q);
   }
@@ -763,7 +874,7 @@ export class VotesService {
   }
 
 
- getVotes(questionId: string): Observable<Vote[]> {
+  getVotes(questionId: string): Observable<Vote[]> {
     return this.questionCollection.doc(questionId).collection<Vote>('votes').valueChanges();
   }
 
