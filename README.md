@@ -666,13 +666,12 @@ Add click listener to the `new Question` button at `votes/votes.component.html`
 ```
 
 #### Implement the logic for the modal at `votes/votes.component.ts`
- * Create `question` and `optoins` data, that we can bind to in the html.
- * Create a model opener function, like: https://valor-software.com/ngx-bootstrap/#/modals
+ * Create `question` and `options` data, that we can bind to in the html.
 
 ```Typescript
 import {Component, TemplateRef} from '@angular/core';
 import {VotesService} from '../votes.service';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {Question} from '../model/Question';
 
 @Component({
@@ -682,12 +681,12 @@ import {Question} from '../model/Question';
 })
 export class VotesComponent {
 
-  modalRef: BsModalRef;
+  modalRef: NgbModalRef;
   question: Question;
   isCollapsed = true;
 
   constructor(public votesService: VotesService,
-              private modalService: BsModalService) {
+              private modalService: NgbModal) {
   }
 
   openModal(template: TemplateRef<any>) {
@@ -701,11 +700,11 @@ export class VotesComponent {
     };
     this.addOption();
     this.addOption();
-    this.modalRef = this.modalService.show(template);
+    this.modalRef = this.modalService.open(template);
   }
 
   async addQuestion() {
-    this.modalRef.hide();
+    this.modalRef.close();
     await this.votesService.addQuestion(this.question);
   }
 
@@ -715,19 +714,6 @@ export class VotesComponent {
 }
 
 ```
-
-#### Import ngx-bootstrap:ModalService  at `app.module.ts`
-```Typescript
-import {ModalModule} from 'ngx-bootstrap/modal';
-...
-import:[
-...
-ModalModule.forRoot(),
-...
-]
-```
-
-
 
 ### 2.e Add Firebase
 
