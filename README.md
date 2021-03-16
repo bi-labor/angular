@@ -36,7 +36,7 @@
   * [5.f Create a bar chart that shows the number of votes for each question](5f-create-a-bar-chart-that-shows-the-number-of-votes-for-each-question)
 
 ## 0. Introduction
-At the end of the guide, please upload the resulting code (without the node_modules folder) in a zip file to the AUT portal.
+At the end of the guide, please upload the resulting code (without the node_modules folder) in a zip file to course Moodle site.
 
 
 ### 0.a Used technologies
@@ -187,7 +187,7 @@ Add navigator and main container to `votes.component.html`:
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarsExampleDefault" [collapse]="isCollapsed">
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault" [ngbCollapse]="isCollapsed">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
         <a class="nav-link" [routerLink]="['/votes']">Questions <span class="sr-only">(current)</span></a>
@@ -213,19 +213,6 @@ Add navigator and main container to `votes.component.html`:
   isCollapsed = true;
 ```
 
-##### Add `CollapseModule` to `app.module.ts`
-```Typescript
-
-import {CollapseModule} from 'ngx-bootstrap/collapse';
-
-...
-
-imports:[
-...
-CollapseModule.forRoot()
-]
-```
-
 ##### Add `BrowserAnimationsModule` to `app.module.ts`
 ```Typescript
 
@@ -245,11 +232,10 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { VotesComponent } from './votes/votes.component';
 import { AppRoutingModule } from './app-routing.module';
-import {CollapseModule} from 'ngx-bootstrap/collapse';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { VotesComponent } from './votes/votes.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -259,10 +245,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
-    CollapseModule.forRoot(),
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
