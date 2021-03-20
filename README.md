@@ -602,7 +602,7 @@ You can use a form generator to create bootstrap 4 forms: https://bootstrapformb
 <ng-template #addVoteTemplate>
   <div class="modal-header">
     <h4 class="modal-title pull-left">New Question Form</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.dismiss()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
