@@ -21,7 +21,7 @@
   * [2.d Add new Question form](#2d-add-new-question-form)
   * [2.e Add Firebase](#2e-add-firebase)
 - [3. Implement Question deletion](#3-implement-question-deletion)
-    + [3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.ts`](#3a-add-delete-button-to-every-question-in-the-same-line-with-the-description-at-votesquestionquestioncomponenethtml)
+    + [3.a Add delete Button to every question in the same line with the description at `votes/question/question.component.ts`](#3a-add-delete-button-to-every-question-in-the-same-line-with-the-description-at-votesquestionquestioncomponenthtml)
     + [3.b Implement `deleteQuestion()` function at `votes/question/question.component.ts`](#3b-implement-deletequestion-function-at-votesquestionquestioncomponentts)
     + [3.c Implement `delete(questionId: string)` function at `services/votes.service.ts`](#3c-implement-deletequestionid-string-function-at-servicesvotesservicets)
 - [4. Add Notifications](#4-add-notifications)
@@ -41,7 +41,7 @@ At the end of the guide, please upload the resulting code (without the node_modu
 
 ### 0.a Used technologies
  * Typescript (+ HTML,CSS,JavaScript)
-	* with ts-lint and .editoconfig
+	* with ts-lint and .editorconfig
  * Angular
 	* with angular-cli
  * RxJS (part of Angular)
@@ -80,7 +80,7 @@ ng new bi-angular
 #### Inspect the created project
   * `package.json` - contains the required npm modules and start up scripts
   * `angular.json` - angular configuration file
-  * `.editogcondig` - editor configuration file (contains rules like indentation)
+  * `.editorconfig` - editor configuration file (contains rules like indentation)
   * `tsconfig.json` - typescript configuration
   * `tslint.json` - typescript configuration (contains rules like no "", but only '')
   * src/
@@ -141,7 +141,7 @@ export class AppComponent {
 ```
 
 
-#### Add componenet to router
+#### Add component to router
 Update `app-routing.module.ts` to look like this:
 
 ```Typescript
@@ -368,7 +368,7 @@ _You can use cli:_
 ng generate s votes
 ```
 
-Or create manuall in a new file at `services/vote.service.ts`
+Or create manually in a new file at `services/vote.service.ts`
 
 ```Typescript
 
@@ -446,7 +446,7 @@ export class VotesComponent {
 }
 
 ```
-##### Update the UI at `votes/votes.componenet.html`
+##### Update the UI at `votes/votes.component.html`
 ```HTML
 <main role="main" class="container">
   <app-question [question]="question"
@@ -490,7 +490,7 @@ export class QuestionComponent {
 
 }
 ```
-**Note:** You can see that we can now use the `[question]` tag in the `votes/votes.componenet.html` to provide an input to the component.
+**Note:** You can see that we can now use the `[question]` tag in the `votes/votes.component.html` to provide an input to the component.
 
 #### Update `votes/question/question.component.html`
 ```HTML
@@ -555,7 +555,7 @@ FormsModule
 `votes/question/question.component.html` uses now the `timeAgo` pipe to convert the `created` timeStamp to readable string.
 It is not a built in pipe, we need to implement it:
 
-Create new pipe at `srcm/app/pipes/TimeAgoPipe.ts`
+Create new pipe at `src/app/pipes/TimeAgoPipe.ts`
 ```Typescript
 import {Pipe, PipeTransform} from '@angular/core';
 
@@ -855,7 +855,7 @@ export class VotesService {
 
 ## 3. Implement Question deletion
 
-#### 3.a Add delete Button to every question in the same line with the description at `votes/question/question.componenet.html`
+#### 3.a Add delete Button to every question in the same line with the description at `votes/question/question.component.html`
 ```HTML
 	<div class="row">
       <div class="col-8">
@@ -930,7 +930,7 @@ const routes: Routes = [
 ### 5.d Design the `statistic` component 
 ![Notification](assets/statistic.jpg)
 #### Use  [navigation](https://getbootstrap.com/docs/4.0/components/navbar/) bar 
-#### Crate a [bootstrap card](https://getbootstrap.com/docs/4.0/components/card/) for your plot
+#### Create a [bootstrap card](https://getbootstrap.com/docs/4.0/components/card/) for your plot
 
 ### 5.e Create statistic logic at `statistic/statistic.component.ts`
 #### Use angular `ActivatedRoute` service to get the id from the active router
@@ -940,7 +940,7 @@ const routes: Routes = [
 
 **Hint 2:** You need to process the data to the appropriate format that plotlyJS requires.
 
-**Hint 3:** On updating the model plotlyJs might not detect changes, trigger detection manaully.
+**Hint 3:** On updating the model plotlyJs might not detect changes, trigger detection manually.
 You can use this trick `this.graphData = JSON.parse(JSON.stringify(this.graphData));`
 
 
