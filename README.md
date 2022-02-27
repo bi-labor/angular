@@ -1,951 +1,639 @@
-# Angular Voting Application
+# BI-Angular lab (2022 version)
+In this laboratory, we will take a closer look at the Angular Framework. Using this framework, we can create complex single page web applications (SPAs), which are commonly used in the field of business intelligence.
 
-**Demo:** https://bi-labor.github.io/angular
-**Feedback:** https://goo.gl/forms/PTYOdBNIB0MpSlzu1 
+To pass the lab (with a result of 2: satisfactory), you must finish the guided part, for which we will detail the necessary code in the following section. Each finished individual task will contribute +1 to the final grade.
 
+At the end of the lab, you'll have to upload the project files in a zip archive **WITHOUT the node_modules** folder!
 
-![Application](assets/main.jpg)
+![Finished application](assets/finished.png)
 
-## Table of contents
-- [0. Introduction](#0-introduction)
-  * [0.a Used technologies](#0a-used-technologies)
-  * [0.b Typescript 101](#0b-typescript-101)
-  * [0.c Angular 101](#0c-angular-101)
-- [1. Create project sceleton](#1-create-project-sceleton)
-  * [1.a. Create a new project](#1a-create-a-new-project)
-  * [1.b. Add simple design](#1b-add-simple-design)
-- [2. Create Questions](#2-create-questions)
-  * [2.a Create question design](#2a-create-question-design)
-  * [2.b Create Model](#2b-create-model)
-  * [2.c Fill UI with data binding](#2c-fill-ui-with-data-binding)
-  * [2.d Add new Question form](#2d-add-new-question-form)
-  * [2.e Add Firebase](#2e-add-firebase)
-- [3. Implement Question deletion](#3-implement-question-deletion)
-    + [3.a Add delete Button to every question in the same line with the description at `votes/question/question.component.ts`](#3a-add-delete-button-to-every-question-in-the-same-line-with-the-description-at-votesquestionquestioncomponenthtml)
-    + [3.b Implement `deleteQuestion()` function at `votes/question/question.component.ts`](#3b-implement-deletequestion-function-at-votesquestionquestioncomponentts)
-    + [3.c Implement `delete(questionId: string)` function at `services/votes.service.ts`](#3c-implement-deletequestionid-string-function-at-servicesvotesservicets)
-- [4. Add Notifications](#4-add-notifications)
-  * [4.a Add notifications module](#4a-add-notifications-module)
-  * [4.b Add toasts](#4b-add-toasts)
-- [5. Add Statistics](#5-add-statistics)
-  * [5.a Add plotly to the project](#5a-add-plotly-to-the-project)
-  * [5.b Add it to the app module](#5b-add-it-to-the-app-module)
-  * [5.c Create a new `statistic` component](#5c-create-a-new-statistic-component)
-  * [5.d Design the statistic component](#5d-design-the-statistic-component)
-  * [5.e Create statistic logic at `statistic/statistic.component.ts`](#5e-create-statistic-logic-at-statisticstatisticcomponentts)
-  * [5.f Create a bar chart that shows the number of votes for each question](5f-create-a-bar-chart-that-shows-the-number-of-votes-for-each-question)
-
-## 0. Introduction
-At the end of the guide, please upload the resulting code (without the node_modules folder) in a zip file to course Moodle site.
-
-
-### 0.a Used technologies
- * Typescript (+ HTML,CSS,JavaScript)
-	* with ts-lint and .editorconfig
- * Angular
-	* with angular-cli
- * RxJS (part of Angular)
- * Bootstrap (ngx-bootstrap)
- * Firebase
-	* with firestore repository
- * ngx-toastr for notifications
- * ploty.js for graph plotting
-
-### 0.b [Typescript 101](typescript_101.md)
-### 0.c [Angular 101](angular_101.md)
- 
-### 0.d Requirements
-* Download and install the latest LTS versino of NodeJS from https://nodejs.org/en/
- 
-## 1. Create project skeleton
-
-### 1.a. Create a new project
-Open a Terminal / Command Prompt, and type in the following commands.
-
-#### Install angular cli
-```bash
-npm install @angular/cli -g
+## 1. Guided task: Creating the project
+In this part we will be creating a new Angular project and review the major concepts and generated files.
+### 1.1. Installing the tool and generating the project
+If not already installed, install the Angular command line tool, by running the following command:
 ```
-#### Create new project
-```bash
-ng new bi-angular
+npm install -g @angular/cli@latest
 ```
 
-- If asked about the enforcement of strict tpye checking, answer No.
-- Don't add routing.
-- Use CSS
-
-**Note:** It takes a while, because of it also installs the *node_modules*
-
-#### Inspect the created project
-  * `package.json` - contains the required npm modules and start up scripts
-  * `angular.json` - angular configuration file
-  * `.editorconfig` - editor configuration file (contains rules like indentation)
-  * `tsconfig.json` - typescript configuration
-  * `tslint.json` - typescript configuration (contains rules like no "", but only '')
-  * src/
-	* `index.html` - start up page, conatins angular `app-root`, the app entry point
-	* app/
-		* `app.module.ts` - list all included modules, components, pipes, services, etc.
-		* `app.component.ts`  - entry component: later it will only contain a router outlet
-		* `*.spec.ts`  - test files
-
-
-
-
-#### Check if it runs
-`npm start` & open `localhost:<port>` in browser.
-
-
-
-
-### 1.b. Add simple design
-
-#### Add new angular component: Votes
-Add it with cli:
-```bash
-ng generate component votes
+Create the project by running the command line tool (CLI) with the following command:
 ```
-Creates these files:
+ng new wordle
 ```
-src/app/votes/votes.component.html
-src/app/votes/votes.component.spec.ts
-src/app/votes/votes.component.ts
-src/app/votes/votes.component.css
+When asked by the interactive wizard select **yes** for adding the routing and **SCSS** as the style sheet format.
+
+Open the newly generated project in your preferred IDE (e.g. VSCode or WebStorm).
+
+### 1.2. Overview of the generated code
+Lets take a closer look at the generated code! Here are some of the more important files and folders created just now.
+
+| Filename | Description |
+|----------|-------------|
+|.browserlistrc | Describes the list of supported browsers. |
+| angular.json | Contains the configuration of the CLI, build and test configs. |
+| package.json | Lists the dependencies of the project and also contains the different run goals. |
+| package-lock.json | Contains the exact version of the dependencies installed in the node_modules folder. |
+| tsconfig.json | Configurations for the TypeScript compiler. |
+| src/assets | Used to store static assets for the project (e.g. images). |
+| src/environments | Used to store different environment configurations (e.g. development, production). |
+| src/index.html | This is the HTML which will be first loaded when a user visits the page. |
+| src/main.ts | The entry point of the application. |
+| src/polyfills.ts | Scripts required for cross browser support. |
+| src/styles.scss | The global stylesheet. |
+| src/app/app.module.ts | The root module, more on that later!|
+| src/app/app-routing.module.ts | Contains the setting for the routing of the root module. |
+
+### 1.3. Angular basics: modules and components
+**Module:** A module is a container for codes related to the same "thing" (same functionality, domain). A module can contain components, service providers, and all kinds of different codes, which can also be exported to be available outside the module. Each Angular application must have at least one module, called the root module.
+
+**Directive:** A directive is a class that pairs some functionality to HTML elements. There are several kinds of directives:
+- Component: The most common type of directive, a component is a directive consisting of a HTML template defining an appearance and a TypeScript class defining a behavior.
+- Attribute directive: Renders function to a HTML attribute, for example by changing the behavior/appearance of the element. There are several built-in attribute directives, such as Ngclass, NgStyle, NgModel
+- Structural directive: Modifies the structure of the DOM by adding or deleting HTML elements. Some built-in structural directives are: NgIf, NgFor, NgSwitch
+
+## 2. Guided task: The home page
+In this task, we will create a small introduction page for our game.
+
+### 2.1. Install and enable bootstrap
+Install bootstrap, which we will be using to help us with styling the application. Run the following command in the project root folder:
 ```
-#### Add routing
-Routing helps us to navigate between screens like:
-
-Between the voting screen and the statistic screen:
-
-![Votes route](assets/votes_navigation.jpg)
-
-![Statistic route](assets/statistic_navigation.jpg)
-
-_(Routing modul is responsible for parsing the current url and *routing*=rendering the application to the appropriate component)_
-```bash
-ng generate module app-routing --flat --module=app
+npm i bootstrap
 ```
-It creates: `app-routing.module.ts` and registeres it at`app.module.ts`
 
-Update `app.component.ts` with a router outlet:
-```Typescript
-@Component({
-  selector: 'app-root',
-  template: `<router-outlet></router-outlet>`
-})
-export class AppComponent {
-  title = 'bi-angular';
+Open **src/styles.scss** and add the following to enable bootstrap for our application, and give some styling to iy:
+```
+@import "~bootstrap/scss/bootstrap";
+
+@media (min-width: 510px) {
+  .container{
+      max-width: 500px;
+  }
 }
 
 ```
 
+Add the following two classes to the **src/app/app.component.scss**:
+```
+.app-bg {
+  background: #222;
+}
 
-#### Add component to router
-Update `app-routing.module.ts` to look like this:
+.card-bg {
+  background: #888;
+}
+```
 
-```Typescript
-import { NgModule } from '@angular/core';
-import {VotesComponent} from './votes/votes.component';
-import {RouterModule, Routes} from '@angular/router';
+Replace the content of the **app.component.html** file with this:
+```
+<div class="app-bg d-flex flex-column justify-content-center vh-100">
+  <div class="container">
+    <div class="card overflow-hidden">
+      <div class="card-body card-bg">
+        <h1 class="text-center mb-5">BI Wordle</h1>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
 
+```
 
+This will be the "frame" of our applications UI. Notice the \<router-outlet\> directive, which serves as the insertion point of our pages.
+
+### 2.2. Create the home page component
+To generate a new component, called home-page, run the following command:
+
+```
+ng g c pages/home-page --skip-selector
+```
+
+*Note: In the Angular terminology we usually differentiate three types of components:
+- **dumb/pure components:** their state depends entirely on ther inputs, therefore they are the most low-level and reusable of the three.
+- **smart components:** smart components are usually more "wired together" with the application, they depend on services, inject dependencies, etc. They usually contain dumb components and are not really reusable themselves.
+- **page components:** page components are smart components which are loaded through routing, therefore they don't need HTML selectors, as they aren't instantiated from HTML, but based on the route.
+
+The home page component is of the former, a page component. That's why we used the `--skip-selector` flag and why we have to add it to the routing.
+
+Update the routing config, by setting our new home-page as the default page in the **app-routing.module.ts**. Don't forget to import the component!
+
+```
 const routes: Routes = [
-  {path: '', redirectTo: '/votes', pathMatch: 'full'},
-  {path: 'votes', component: VotesComponent}
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'home'
+  },
+  {
+    path: 'home',
+    component: HomePageComponent
+  }
 ];
+```
 
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+Replace the home-page.component.html with the following code:
+
+```
+<p class="fw-bold">Welcome to BI-Wordle!</p>
+<p>In this game you will have to guess a 5 letter long word! After each guess, you will see whether the chosen letter:</p>
+<ul>
+  <li>is not in the word (gray)</li>
+  <li>exists in the world (yellow)</li>
+  <li>is in the word an in the correct place (green)</li>
+</ul>
+<button class="btn btn-primary w-100" [routerLink]="['/game']">Start Game!</button>
+```
+
+This is a short description of the game, and a button, which will lead us to the game screen, using the routerLink directive.
+
+*Note: notice the [ ] for propery binding.*
+
+## 3. Guided task: Implementing the game logic
+In the next part, we will implement the gamelogic itself.
+
+### 3.1. Models
+Create a folder under the app folder named model! Under this folder, we will create two files, the first is:
+
+**app/model/guess-result.ts**:
+```
+export enum GuessResult {
+  NOT_TRIED,
+  NO_MATCH,
+  WRONG_POSITION,
+  GOOD_POSITION
+}
+```
+This enum contains the possible matches of a character in a guess.
+
+**app/model/guess.ts**:
+```
+import { GuessResult } from "./guess-result";
+
+export interface Guess {
+  word: string;
+  matches: GuessResult[];
+}
+
+export const ALPHABET: string[] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+export const MAX_NUMBER_OF_GUESSES = 6;
+
+```
+This interface describes how a guess object looks like, some usefull constants are also defined in this file.
+
+### 3.2. Game service
+Let's create the game service! Run the following command:
+```
+ng g s services/game
+```
+
+Replace the contents of the newly generated game.service.ts with the follwing:
+
+```
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { MAX_NUMBER_OF_GUESSES } from '../model/guess';
+import { GuessResult } from '../model/guess-result';
+import { tap } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
 })
-export class AppRoutingModule { }
+export class GameService {
 
-```
+  private word: string = '';
+  private wordList: Array<string> = [];
+  private guesses: Array<string> = [];
 
+  constructor(private http: HttpClient) {}
 
-#### Install bootstrap
-You can google for *angular bootstrap* and find a nice npm module.
-Best practice: look for the one that has the most stars at github + has a solid documentation.
-We will use valor-software's ngx-bootstrap:
-```bash
-ng add @ng-bootstrap/ng-bootstrap
-```
-**Note:** This installs and adds to the package.json `ngx-bootstrap` and `bootstrap` dependencies
-
-
-#### Create a skeleton design for Votes component
-Look for example designs at: https://getbootstrap.com/docs/4.2/examples/starter-template/
-
-Add navigator and main container to `votes.component.html`:
-```HTML
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-  <a class="navbar-brand" href="https://www.aut.bme.hu/Course/VIAUMB00">Angular Lab</a>
-  <button class="navbar-toggler" (click)="isCollapsed = !isCollapsed" 
-	  type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-          aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarsExampleDefault" [ngbCollapse]="isCollapsed">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" [routerLink]="['/votes']">Questions <span class="sr-only">(current)</span></a>
-      </li>
-    </ul>
-    <ul class="nav justify-content-center">
-      <li class="nav-item">
-        <button class="btn btn-primary">New Question</button>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-
-<main role="main" class="container">
-
-</main><!-- /.container -->
-
-```
-##### Add `isCollapsed` to  `votes/votes.component.ts` as a member field
-
-```Typescript
-  isCollapsed = true;
-```
-
-##### Add `BrowserAnimationsModule` to `app.module.ts`
-```Typescript
-
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-...
-
-imports:[
-...
-    BrowserAnimationsModule,
-]
-```
-
-Your final app.module.ts should look like this:
-```Typescript
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { VotesComponent } from './votes/votes.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-
-@NgModule({
-  declarations: [
-    AppComponent,
-    VotesComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgbModule,
-    BrowserAnimationsModule,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule { }
-
-
-```
-
-
-## 2. Create Questions
-
-### 2.a Create question design
-#### Create new `question` component
-```bash
-ng generate component votes/question
-```
-#### Add dummy design to `votes/question/question.component.html`
-
-```HTML
-<div class="card mb-3">
-  <img src="..." class="card-img-top">
-  <div class="card-body">
-
-    <div class="row">
-      <div class="col-8">
-        <h5 class="card-title">Question placeholder</h5>
-      </div>
-      <div class="col-4">
-        <p class="card-text float-right">
-          <small class="text-muted">Created a minute ago</small>
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-8">
-        <p class="card-text">Short Description</p>
-      </div>
-    </div>
-
-    <hr/>
-    <div class="form-group row">
-      <div class="col-12">
-        <div class="custom-control custom-radio custom-control-inline">
-          <input  name="radio-0" id="radio-0"
-                 type="radio"
-                 class="custom-control-input" value="rabbit">
-          <label for="radio-0" class="custom-control-label">{{1}}) First option</label>
-        </div>
-		
-        <div class="custom-control custom-radio custom-control-inline">
-          <input  name="radio-1" id="radio-1"
-                 type="radio"
-                 class="custom-control-input" value="rabbit">
-          <label for="radio-1" class="custom-control-label">{{2}}) First option</label>
-        </div>
-        <button  type="button" class="btn btn-secondary float-right">Vote</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-```
-
-#### Use it from `votes/votes.component.html`:
-```HTML
-...
-<main role="main" class="container">
-  <app-question></app-question>
-</main><!-- /.container -->
-
-```
-
-##### Fix the design
-Add a top margin to body (src/styles.css), this will seperate the content from the navbar.
-```
-body {
- margin-top: 100px;
-}
-```
-
-### 2.b Create Model
-#### `QuestionOption` interface at `src/app/model/QuestionOption.ts`
-```Typescript
-export interface QuestionOption {
-  label: string;
-}
-```
-
-#### `Question` interface at `src/app/model/Question.ts`
-```Typescript
-import {QuestionOption} from './QuestionOption';
-
-export interface Question {
-  photoUrl?: string;
-  question: string;
-  description?: string;
-  created: number;
-  options: QuestionOption[];
-}
-
-export interface QuestionEntity extends Question {
-  id: string;
-}
-```
-
-#### `Vote` interface at `src/app/model/Vote.ts`
-```Typescript
-export interface Vote {
-  option: string;
-  timeStamp: number;
-}
-```
-
-#### Create Vote service with dummy data
-_You can use cli:_
-```bash
-ng generate s votes
-```
-
-Or create manually in a new file at `services/vote.service.ts`
-
-```Typescript
-
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {Question, QuestionEntity} from './model/Question';
-import {Vote} from './model/Vote';
-
-@Injectable()
-export class VotesService {
-
-  questions: Observable<QuestionEntity[]>;
-
-  constructor() {
-    this.questions = this.getDummyQuestions();
+  initWordList() {
+    // We load the words from a static file
+    return this.http.get<string[]>('assets/json/word-list.json').pipe(
+      tap(result => {
+        this.wordList = result;
+      })
+    );
   }
 
-  getDummyQuestions(): Observable<QuestionEntity[]> {
-    return new BehaviorSubject([
-      {
-        id: '1',
-        photoUrl: '',
-        question: 'How are you?',
-        description: 'I\'m good too..',
-        created: Date.now(),
-        options: [{label: 'good'}, {label: 'ehh'}]
-      },
-      {
-        id: '2',
-        photoUrl: '',
-        question: 'How are you again?',
-        description: 'Just cheking...',
-        created: Date.now(),
-        options: [{label: 'good again'}, {label: 'still ehh'}]
+  /**
+   * Starts the game by selecting a random word from the list.
+   */
+  startGame() {
+    this.word = this.wordList[Math.round(Math.random() * this.wordList.length)];
+    console.log('Game starting, the word is ' + this.word);
+  }
+
+  /**
+   * Checks whether the given list is in the word list.
+   * @param guessedWord
+   * @returns
+   */
+  isInWordList(guessedWord: string): Boolean {
+    return this.wordList.indexOf(guessedWord.toLowerCase()) != -1
+  }
+
+  /**
+   * Evaluates a guess.
+   * @param guessedWord
+   * @returns
+   */
+  guess(guessedWord: string): GuessResult[] {
+    guessedWord = guessedWord.toLowerCase();
+    this.guesses.push(guessedWord);
+    return this.calculateMatches(guessedWord);
+  }
+
+  /**
+   * Returns whether the game is finished yet.
+   * @returns
+   */
+  isFinished(): boolean {
+    return (this.guesses.length != 0 && this.guesses[this.guesses.length - 1] == this.word)
+      || this.guesses.length >= MAX_NUMBER_OF_GUESSES;
+  }
+
+  /**
+   * Calculates the guess result for each character in the given word.
+   * @param word
+   * @returns
+   */
+  calculateMatches(word: string): GuessResult[] {
+    let matches = Array<GuessResult>();
+    for (let i = 0; i < 5; i++) {
+      let char = word.charAt(i);
+      if (this.word.charAt(i) == char) {
+        matches.push(GuessResult.GOOD_POSITION);
+      } else if (this.word.indexOf(char) != -1) {
+        matches.push(GuessResult.WRONG_POSITION);
+      } else {
+        matches.push(GuessResult.NO_MATCH);
       }
-    ]);
-  }
-
-  async addQuestion(q: Question) {
-    // TODO: implement
-  }
-
-  async vote(questionId: string, optionLabel: string) {
-    // TODO: implement
-  }
-
-  async delete(questionId: string) {
-    // TODO: implement
-  }
-
-  getVotes(questionId: string): Observable<Vote[]> {
-    // TODO: implement
-    return null;
-  }
-}
-
-```
-**Note:** Don't forget to add it to the app module at `app.module.ts`
-```Typescript
-import {VotesService} from './votes.service';
-...
-providers:[
-...
-VotesService
-]
-```
-
-
-### 2.c Fill UI with data binding
-##### Inject the VotesService to  `votes/votes.component.ts`:
-```Typescript
-export class VotesComponent {
-  constructor(public votesService: VotesService) {
-  }
-}
-
-```
-##### Update the UI at `votes/votes.component.html`
-```HTML
-<main role="main" class="container">
-  <app-question [question]="question"
-                *ngFor="let question of votesService.questions | async"></app-question>
-</main><!-- /.container -->
-```
-**Note:** We are using the `async` pipe, since `votesService.questions` is an `Observervable<QuestionEntity>` type.
-
-#### Update `votes/question/question.component.ts`
-Add `question` as an input parameter of the component.
-
-```Typescript
-import {Component, Input, OnInit} from '@angular/core';
-import {QuestionEntity} from '../../model/Question';
-import {VotesService} from '../../votes.service';
-
-@Component({
-  selector: 'app-question',
-  templateUrl: './question.component.html',
-  styleUrls: ['./question.component.css']
-})
-export class QuestionComponent {
-
-  selected: string;
-  @Input() question: QuestionEntity;
-
-  constructor(private votesService: VotesService) {
-  }
-
-  async vote() {
-    if (!this.selected) {
-      return;
     }
-    await this.votesService.vote(this.question.id, this.selected);
-    // TODO: add toast
+    return matches;
   }
 
-  async deleteQuestion() {
-    // TODO: implement
-  }
+  /**
+   * Returns whether the given character was guessed in any position.
+   * @param char
+   * @returns
+   */
+  charResult(char: string): GuessResult {
+    let result = GuessResult.NOT_TRIED;
 
+    for (let guess of this.guesses) {
+      let guessResult = this.calculateMatches(guess);
+
+      // Go over the characters of each word
+      for (let i = 0; i < 5; i++) {
+        // If the guessed char is the current char
+        if (char.toLowerCase() == guess[i]) {
+          if (result == GuessResult.NOT_TRIED) {
+            // If it was tried at least once, we can be sure that the result would be at least NO MATCH (possibly better)
+            result = GuessResult.NO_MATCH;
+          }
+
+          if (guessResult[i] == GuessResult.GOOD_POSITION) {
+            // If we find a GOOD POSITION, we can disregard each other finds and return that as our result.
+            return GuessResult.GOOD_POSITION;
+          } else if (guessResult[i] == GuessResult.WRONG_POSITION) {
+            // Else, if we find a WRONG POSITION, we save it as the "next best result" but we keep searching
+            result = GuessResult.WRONG_POSITION;
+          }
+        }
+      }
+    }
+    return result;
+  }
 }
 ```
-**Note:** You can see that we can now use the `[question]` tag in the `votes/votes.component.html` to provide an input to the component.
+This implements the core game logic, let's study the main parts of it!
 
-#### Update `votes/question/question.component.html`
-```HTML
-<div class="card mb-3">
-  <img *ngIf="question.photoUrl" [src]="question.photoUrl" class="card-img-top">
-  <div class="card-body">
-
-    <div class="row">
-      <div class="col-8">
-        <h5 class="card-title">{{question.question}}</h5>
-      </div>
-      <div class="col-4">
-        <p class="card-text float-right">
-          <small class="text-muted">Created {{question.created | timeAgo}}</small>
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-8">
-        <p class="card-text">{{question.description}}</p>
-      </div>
-    </div>
-
-    <hr/>
-    <div class="form-group row">
-      <div class="col-12">
-        <form #voteForm="ngForm">
-        <div class="custom-control custom-radio custom-control-inline"
-             *ngFor="let option of question.options; let i=index">
-          <input [(ngModel)]="selected"
-                 [value]="option.label"
-                 name="radio-{{question.id}}"
-                 id="radio-{{question.id}}{{i}}"
-                 type="radio"
-                 class="custom-control-input" required>
-          <label for="radio-{{question.id}}{{i}}" class="custom-control-label">{{i+1}}) {{option.label}}</label>
-        </div>
-        <button (click)="vote()"  [disabled]="!voteForm.form.valid" type="button" class="btn btn-secondary float-right">Vote</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
+In the constructor, we inject the `HttpClient`, which is a service used to make HTTP request. To make it available for our service, we must provide first! Add the following to the **app.module.ts**, at the appropriate places!
 
 ```
+import { HttpClientModule } from '@angular/common/http';
 
-### Import angular:FormsModule at `app.module.ts`
-We are using angular forms to disable the voting button if no radio button is selected
-```Typescript
-import {FormsModule} from '@angular/forms';
 ...
-import:[
-...
-FormsModule
-...
+
+imports: [
+  ...
+  HttpClientModule
 ]
 ```
 
+In the `initWordList()` function, we will use the `HttpClient` to download the list of possible words. This **word-list.json** is available in the current repository. [Download](assets/word-list.json) it and place it under the **assets/json** directory.
 
-#### Add time transformation pipe
-`votes/question/question.component.html` uses now the `timeAgo` pipe to convert the `created` timeStamp to readable string.
-It is not a built in pipe, we need to implement it:
+Lets examine the remaining functions! Each of their comments will describe what they do.
 
-Create new pipe at `src/app/pipes/TimeAgoPipe.ts`
-```Typescript
-import {Pipe, PipeTransform} from '@angular/core';
+## 4. Guided task: Game UI
+In this part, we will create the game page and associated components, which will be used as the main UI for playing the game.
+
+### 4.1. Create the match color pipe
+The `GuessResult` enum describes the possible outcomes of a guess. A letter can be either `NOT_TRIED`, `NO_MATCH`, `WRONG_POSITION` or `GOOD_POSITION`. However to indicate it to the user, we must display different colors. To overcome this issue, we will use a pipe. A pipe is an Angular component used to transform data for display purposes. Pipes are very useful for formatting data, as omplex transformation logic can be implemented in them, they are used for date formatting, localization, etc. To create a new one, run the following command:
+
+```
+ng g p pipes/match-color
+```
+
+Replace the content of the newly generated pipe (**match-color.pipe.ts**), with the following:
+
+```
+import { Pipe, PipeTransform } from '@angular/core';
+import { GuessResult } from '../model/guess-result';
 
 @Pipe({
-  name: 'timeAgo',
-  pure: false
+  name: 'matchColor'
 })
-export class TimeAgoPipe implements PipeTransform {
+export class MatchColorPipe implements PipeTransform {
 
-
-  public transform(time: number): string {
-    const delta = (Date.now() - time) / 1000;
-
-    // format string
-    if (delta < 60) { // sent in last minute
-      return `${Math.floor(delta)}s ago`;
-    } else if (delta < 3600) { // sent in last hour
-      return `${Math.floor(delta / 60)}m ago`;
-    } else if (delta < 86400) { // sent on last day
-      return `${Math.floor(delta / 3600)}h ago`;
-    } else { // sent more than one day ago
-      return `${Math.floor(delta / 86400)}d ago`;
+  /**
+   * Transforms the value of a GuessReuslt to a color (green, yellow, gray or black)
+   * @param value
+   * @param args
+   * @returns
+   */
+  transform(value: GuessResult): string {
+    switch (value) {
+      case GuessResult.GOOD_POSITION:
+        return "#00AA00";
+      case GuessResult.NOT_TRIED:
+        return "#808080";
+      case GuessResult.WRONG_POSITION:
+        return "#DDDD00";
+      case GuessResult.NO_MATCH:
+        return "#000000";
     }
   }
-
 }
 ```
-**Note:** Don't forget to add it to the app module at `app.module.ts`
-```Typescript
-import {TimeAgoPipe} from './pipes/TimeAgoPipe';
-...
-declarations:[
-TimeAgoPipe
-]
+
+### 4.2. Create the letter component
+The letter component will be out first real reusable, dumb component. Its purpose is to disaply a single letter of a guess. Create it with the following command:
+
+```
+ng g c components/letter 
 ```
 
-### 2.d Add new Question form
-
-#### Add a modal to `votes/votes.component.html` (insert this at the end of the file)
-![Modal](assets/modal.jpg)
-
-You can use a form generator to create bootstrap 4 forms: https://bootstrapformbuilder.com/
-```HTML
-<ng-template #addVoteTemplate>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">New Question Form</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <form (ngSubmit)="addQuestion()" #questionForm="ngForm">
-      <div class="form-group row">
-        <label class="col-3 col-form-label" for="question">Question</label>
-        <div class="col-9">
-          <input [(ngModel)]="question.question" id="question" name="question" placeholder="How long is the...?"
-                 required="required" type="text" class="form-control">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="photo-url" class="col-3 col-form-label">Photo url</label>
-        <div class="col-9">
-          <input [(ngModel)]="question.photoUrl" id="photo-url" name="photo-url" placeholder="https://myurl.com/img.png"
-                 type="text" class="form-control">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="description" class="col-3 col-form-label">Description</label>
-        <div class="col-9">
-          <input [(ngModel)]="question.description" id="description" name="description" placeholder="Some more context"
-                 type="text" class="form-control">
-        </div>
-      </div>
-
-      <div class="form-group row" *ngFor="let option of question.options; let i = index">
-        <label for="description" class="col-2 offset-3 col-form-label">{{i + 1}}.</label>
-        <div class="col-7">
-          <input [(ngModel)]="option.label"
-                 [name]="'option-'+(i+1)"
-                 placeholder="Option {{i+1}}"
-                 required="required"
-                 type="text"
-                 class="form-control">
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="offset-3 col-4">
-          <button name="submit" type="button" (click)="addOption()" class="btn btn-secondary">Add Option</button>
-        </div>
-        <div class="col-5">
-          <button name="submit" type="submit" [disabled]="!questionForm.form.valid"
-                  class="btn btn-primary float-right">Create Question
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-</ng-template>
+Replace the content of the **letter.component.ts** with the following:
 ```
-Add click listener to the `new Question` button at `votes/votes.component.html`
-```HTML
- <li class="nav-item">
-     <button class="btn btn-primary"
-			 (click)="openModal(addVoteTemplate)">
-	 New Question
-	 </button>
- </li>
-```
-
-#### Implement the logic for the modal at `votes/votes.component.ts`
- * Create `question` and `options` data, that we can bind to in the html.
-
-```Typescript
-import {Component, TemplateRef} from '@angular/core';
-import {VotesService} from '../votes.service';
-import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
-import {Question} from '../model/Question';
+import { Component, Input, OnInit } from '@angular/core';
+import { GuessResult } from 'src/app/model/guess-result';
 
 @Component({
-  selector: 'app-votes',
-  templateUrl: './votes.component.html',
-  styleUrls: ['./votes.component.css']
+  selector: 'app-letter',
+  templateUrl: './letter.component.html',
+  styleUrls: ['./letter.component.scss']
 })
-export class VotesComponent {
+export class LetterComponent implements OnInit {
 
-  modalRef: NgbModalRef;
-  question: Question;
-  isCollapsed = true;
+  @Input() letter: string = '';
+  @Input() result: GuessResult = GuessResult.NOT_TRIED;
 
-  constructor(public votesService: VotesService,
-              private modalService: NgbModal) {
-  }
+  constructor() {}
 
-  openModal(template: TemplateRef<any>) {
+  ngOnInit(): void {}
+}
+```
+Notice the two fields annotated with the `@Input` decorator. `@Input` and `@Output` are used to facilitate the transfer of data between parent and child components. In this case, it means that the fields `letter` and `result` can be given a value by the parent component.
 
-    this.question = {
-      question: '',
-      created: Date.now(),
-      photoUrl: '',
-      description: '',
-      options: []
-    };
-    this.addOption();
-    this.addOption();
-    this.modalRef = this.modalService.open(template);
-  }
+Replace the contents of the **letter.component.html** with the following:
+```
+<input type="text" class="letter" maxlength="1" [value]="letter" [ngStyle]="{'background-color': result | matchColor}" disabled>
+```
+In this HTML template code, we bind the value attribute to the value field, using property binding. We also bind the style attribute, using the previously created pipe to the value of the result.
 
-  async addQuestion() {
-    this.modalRef.close();
-    await this.votesService.addQuestion(this.question);
-  }
+Lets add some styling to our component, insert the following into the **letter.component.scss**:
 
-  addOption() {
-    this.question.options.push({label: ''});
+```
+.letter {
+  width: 60px;
+  height: 60px;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+  font-size: 30px;
+}
+```
+
+### 4.3. Create the guess component
+The guess component will be used to represent a guess. A guess is made up of 5 letters, so here, we will re-use the previously created letter component.
+
+Generate the guess component by running:
+```
+ng g c components/guess
+```
+
+Replace the contents of the **guess.component.ts** with the following:
+```
+import { Component, Input, OnInit } from '@angular/core';
+import { Guess } from 'src/app/model/guess';
+
+@Component({
+  selector: 'app-guess',
+  templateUrl: './guess.component.html',
+  styleUrls: ['./guess.component.scss']
+})
+export class GuessComponent implements OnInit {
+
+  @Input() guess: Guess = {
+    word: '',
+    matches: [],
+  };
+
+  constructor() {}
+
+  ngOnInit(): void {
+
   }
 }
-
 ```
 
-### 2.e Add Firebase
-
-#### Data stucure
-
+Replace the contents of th **guess.component.html** with the following:
 ```
-- questions:collection
-|--- id:string
-|--- question:string
-|--- photoUrl:string
-|--- description:string
-|--- created:number
-|--- options:{label:string}[]
-|--- votes:collection
-      |--- option:string
-      |--- timeStamp:number
+<div class="guess-row">
+  <app-letter *ngFor="let index of [0, 1, 2, 3, 4]" [letter]="guess.word[index] || ''" [result]="guess.matches[index]"></app-letter>
+</div>
 ```
 
+Finally add some styling to the component by inserting the following into **guess.component.scss**
 
-#### Add Firebase to the project
-```bash
-npm install firebase @angular/fire --save
 ```
-#### Set up firabase
-Update `environments/environment.ts`
+.guess-row {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+```
 
-You can create your own firebase token, but you can use these:
-```Typescript
-export const environment = {
-  production: false,
-  firebase: {
-    apiKey: "AIzaSyD0qWw7YgMqGd-ELV0a8ea8O0w2u29wR4M",
-    authDomain: "bi-labor-angular2.firebaseapp.com",
-    databaseURL: "https://bi-labor-angular2.firebaseio.com",
-    projectId: "bi-labor-angular2",
-    storageBucket: "bi-labor-angular2.appspot.com",
-    messagingSenderId: "1009646526609"
+### 4.4. Create the keyboard component
+Our final component will be the keyboard component, used to display which letters were used to the user. For this, first generate a new component by running the following command:
+```
+ ng g c components/keyboard
+```
+
+Replace the contents of the **keyboard.component.ts** with the following:
+```
+import { Component, OnInit } from '@angular/core';
+import { ALPHABET } from 'src/app/model/guess';
+import { GuessResult } from 'src/app/model/guess-result';
+import { GameService } from 'src/app/services/game.service';
+
+@Component({
+  selector: 'app-keyboard',
+  templateUrl: './keyboard.component.html',
+  styleUrls: ['./keyboard.component.scss']
+})
+export class KeyboardComponent implements OnInit {
+
+  alphabet: string[] = ALPHABET;
+
+  constructor(private gameService: GameService) {}
+
+  ngOnInit(): void {}
+
+  charResult(char: string): GuessResult {
+    return this.gameService.charResult(char);
   }
-};
+}
 ```
 
-Alternative you can also you this settings:
+Replace the contents of th **keyboard.component.html** with the following:
+
 ```
-    apiKey: "AIzaSyDol8jLaHIPSfChtIyg7X36aMyVrN83K_4",
-    authDomain: "bi-labor-angular1.firebaseapp.com",
-    databaseURL: "https://bi-labor-angular1.firebaseio.com",
-    projectId: "bi-labor-angular1",
-    storageBucket: "",
-    messagingSenderId: "363613880788"
+<h4>Letters</h4>
+<button class="keyboard-letter" type="button" *ngFor="let key of alphabet" [ngStyle]="{ 'background-color': charResult(key) | matchColor }">{{key}}</button>
 ```
 
-#### Add firebase to `app.module.ts`
-```Typescript
-import {AngularFireModule} from '@angular/fire';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
-import {environment} from '../environments/environment';
+Finally add some styling to the component by inserting the following into **keyboard.component.scss**
+```
+.keyboard-letter {
+  width: 30px;
+  margin: 2px;
+  color: white;
+}
+```
+
+### 4.5. Generate the game page component
+The final component which will use all the building blocks we created so far will be the game page component. Generate this new component using the following command:
+
+```
+ng g c pages/game-page --skip-selector
+```
+
+Set up routing for the new page, just like the previous time, add the following to the **app-routing.module.ts**:
+
+```
 ...
-imports: [
-...
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule
-]
+  {
+    path: 'game',
+    component: GamePageComponent
+  }
 ```
 
-#### Update votes service at `services/votes.service.ts`
-```Typescript
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {Question, QuestionEntity} from './model/Question';
-import {Vote} from './model/Vote';
-import {AngularFirestore, AngularFirestoreCollection, DocumentChangeAction} from '@angular/fire/firestore';
-import {map} from 'rxjs/operators';
+Don't forget to import the component!
 
-@Injectable()
-export class VotesService {
+Replace the content of the **game-page.component.ts** with the following:
 
-  questions: Observable<QuestionEntity[]>;
+```
+import { Component, HostListener, OnInit } from '@angular/core';
+import { ALPHABET, Guess, MAX_NUMBER_OF_GUESSES } from 'src/app/model/guess';
+import { GameService } from 'src/app/services/game.service';
 
-  private questionCollection: AngularFirestoreCollection<Question>;
+@Component({
+  templateUrl: './game-page.component.html',
+  styleUrls: ['./game-page.component.scss']
+})
+export class GamePageComponent implements OnInit {
 
-  constructor(private afs: AngularFirestore) {
-    this.questionCollection = afs.collection<Question>('questions',
-      ref => ref.orderBy('created', 'desc').limit(50));
+  currentGuessNumber: number = 0;
+  guesses: Guess[] = [];
 
-    this.questions = <any>this.questionCollection.snapshotChanges().pipe(
-      map((actions: DocumentChangeAction<Question>[]) => {
-        return actions.map(a => {
-          const data = a.payload.doc.data() as Question;
-          const id = a.payload.doc.id;
-          return {id, ...data};
-        });
-      }));
+  constructor(private gameService: GameService) {}
+
+  ngOnInit(): void {
+    // Fill the guesses array with empty guesses
+    for (let i = 0; i < MAX_NUMBER_OF_GUESSES; i++) {
+      this.guesses.push({
+        word: '',
+        matches: [],
+      });
+    }
+    this.gameService.initWordList().subscribe(() => {
+      this.gameService.startGame();
+    });
   }
 
+  @HostListener('document:keyup', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.gameService.isFinished()) {
+      return;
+    }
 
-  getDummyQuestions(): Observable<QuestionEntity[]> {
-    return new BehaviorSubject([
-      {
-        id: '1',
-        photoUrl: '',
-        question: 'How are you?',
-        description: 'I\'m good too..',
-        created: Date.now(),
-        options: [{label: 'good'}, {label: 'ehh'}]
-      },
-      {
-        id: '2',
-        photoUrl: '',
-        question: 'How are you again?',
-        description: 'Just cheking...',
-        created: Date.now(),
-        options: [{label: 'good again'}, {label: 'still ehh'}]
+    const currentWord = this.guesses[this.currentGuessNumber].word;
+    const key = event.key;
+
+    if (key == 'Enter' && currentWord.length == 5) {
+      if (this.gameService.isInWordList(currentWord)) {
+        this.guesses[this.currentGuessNumber].matches = this.gameService.guess(currentWord);
+        this.currentGuessNumber++;
+      } else {
+        alert("Not in the word list!")
       }
-    ]);
+    } else if (key == 'Backspace') {
+      this.guesses[this.currentGuessNumber].word = currentWord.substring(0, currentWord.length - 1);
+    } else if (ALPHABET.indexOf(key.toUpperCase()) != -1 && currentWord.length < 5) {
+      this.guesses[this.currentGuessNumber].word += key.toUpperCase();
+    }
   }
-
-  async addQuestion(q: Question) {
-    await this.questionCollection.add(q);
-  }
-
-  async vote(questionId: string, optionLabel: string) {
-    await this.questionCollection.doc(questionId)
-      .collection<Vote>('votes').add({timeStamp: Date.now(), option: optionLabel});
-  }
-
-  async delete(questionId: string) {
-    // TODO: implement
-    // do not forget to delete the votes subcollection manually
-  }
-
-
-  getVotes(questionId: string): Observable<Vote[]> {
-    return this.questionCollection.doc(questionId).collection<Vote>('votes').valueChanges();
-  }
-
 }
 ```
 
-
-## 3. Implement Question deletion
-
-#### 3.a Add delete Button to every question in the same line with the description at `votes/question/question.component.html`
-```HTML
-	<div class="row">
-      <div class="col-8">
-        <p class="card-text">{{question.description}}</p>
-      </div>
-	  --------Copy between these----------
-       <div class="col-4">
-        <button type="button" (click)="deleteQuestion()" class="btn btn-outline-danger float-right">Delete</button>
-        <a  [routerLink]="['/statistic', question.id]"
-           class="btn btn-outline-primary float-right mr-2 ml-2">Statistic</a>
-      </div>
-	  --------Copy between these----------
-    </div>
-```
-
-#### 3.b Implement `deleteQuestion()` function at `votes/question/question.component.ts`
-#### 3.c Implement `delete(questionId: string)` function at `services/votes.service.ts`
-**Note:** Firestore [does not delete subcollections automatically](https://firebase.google.com/docs/firestore/manage-data/delete-data), but you can [do it manually](https://github.com/angular/angularfire2/issues/1400).
-**Hint:** Query the firestore document that has the id `questionId` and delete it.
-
-## 4. Add Notifications
-![Notification](assets/notification.jpg)
-### 4.a Add notifications module
-
-#### Install and save to `package.json`
-We are using ngx-toastr: https://github.com/scttcper/ngx-toastr
-```bash
-npm install ngx-toastr --save
-npm install @angular/animations --save
-```
-#### Add toaster module to `app.module.ts`
-#### Also add the toaster stylesheet to `angular.json`, read more at: https://github.com/scttcper/ngx-toastr
-
-#### **Note:** There is a current minor issue with the lib as the css style interfears with bootstrap
-Read more here: https://github.com/scttcper/ngx-toastr/issues/602
-#### Solution
-Add this to `styles.css`
-```css
-#toast-container > div {
-  opacity:1;
-}
+Replace the contents of the **game-page.component.html** with the following:
 
 ```
-
-### 4.b Add toasts
-#### Show a toast on creating a new Question
-#### Show a toast on deleting a Question
-#### Show a toast on voting on a Question
-
-
-## 5. Add Statistics
-### 5.a Add plotly to the project
-We are using angular-ploty: https://github.com/plotly/angular-plotly.js/blob/master/README.md
-```bash
- npm install angular-plotly.js plotly.js --save
-```
-### 5.b Add it to the app module
-### 5.c Create a new `statistic` component 
-#### Generate it
-```bash
-ng g c statistic
-```
-#### Add it to the routing so that it has an id parameter
-```Typescript
-const routes: Routes = [
-  { path: '', redirectTo: '/votes', pathMatch: 'full' },
-  { path: 'votes', component: VotesComponent },
-  { path: 'statistic/:id', component: StatisticComponent }
-];
+<div *ngFor="let guess of guesses" class="text-center">
+  <app-guess [guess]="guess"></app-guess>
+</div>
+<app-keyboard></app-keyboard>
 ```
 
-### 5.d Design the `statistic` component 
-![Notification](assets/statistic.jpg)
-#### Use  [navigation](https://getbootstrap.com/docs/4.0/components/navbar/) bar 
-#### Create a [bootstrap card](https://getbootstrap.com/docs/4.0/components/card/) for your plot
+Thats it, start the application by running the following command in the base directory!
+```
+npm start
+```
 
-### 5.e Create statistic logic at `statistic/statistic.component.ts`
-#### Use angular `ActivatedRoute` service to get the id from the active router
-**Hint:** You need to `subscribe` to the `ActivatedRoute:params` observable parameters list.
-#### Use `VoteService` to get votes
-**Hint 1:** It is an Observable you need to `subscribe` to it.
+After finisihing the initial startup, the application will be available on `http://localhost:4200`
 
-**Hint 2:** You need to process the data to the appropriate format that plotlyJS requires.
+## 5. Individual task: End game page component
+- Create and end game page available on the "/end" route.
+- The page should contain a "Game over" label.
+- When the game finished navigate to this page automatically.
 
-**Hint 3:** On updating the model plotlyJs might not detect changes, trigger detection manually.
-You can use this trick `this.graphData = JSON.parse(JSON.stringify(this.graphData));`
+**Hints:**
+- To navigate from a component code, you can inject the Router to the game-page component (by making it a constructor parameter) and than use the navigateByUrl method when the game is finished.
+
+## 6. Individual task: End game page dynamic content 
+- Extend the previously created end game page, to either say "Congratulations!" or "Better luck next time!" based on the result of the game.
+- Create a new game button, which will be used to start a new game.
+
+**Hints:**
+- The game result can be determined by the game-service, i.e. if the last guess is equals to the selected word, we can be sure that the player won. The game service can be injected to the new game result page component.
+- To conditionally display text, you can use the `NgIf` structural directive on parts of the HTML. Alternatively you can store the message in a variable and dispaly it using the interpolation operator (`{{ }}`).
+
+## 7. Individual task: End game statistics
+- When playing multiple games, save the statistics on how many gueses each game took to finish. E.g. 1 guess: 0 game, 2 guess: 1 game, 3 guess: 5 games...
+- Display this statistic on the end game page in a table where the rows are the number of tries. E.g.
+- A game is considered lost, if after 6 tries the selected word is not found
+
+| Number of tries | Games |
+| --- | --- |
+| 1 | 0 |
+| 2 | 1 |
+| 3 | 5 |
+| 4 | 2 |
+| 5 | 1 |
+| 6 | 0 |
+| lost | 0 |
 
 
-### 5.f Create a bar chart that shows the number of votes for each question
-
-
-## Feedback: https://goo.gl/forms/PTYOdBNIB0MpSlzu1 
+**Hints:**
+- The game service should also store the results. It's not a problem however if they are lost on a page reload, you can use simple class variables.
+- You can use static HTML to build the table (you don't have to prepare for variable amount of rows).
 
