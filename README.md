@@ -8,7 +8,7 @@ At the end of the lab, you'll have to upload the project files in a zip archive 
 ![Finished application](assets/finished.png)
 
 ## 1. Guided task: Creating the project
-In this part we will be creating a new Angular project and review the major concepts and generated files.
+In this part we will be creating a new Angular project and reviewing the major concepts and generated files.
 ### 1.1. Installing the tool and generating the project
 If not already installed, install the Angular command line tool, by running the following command:
 ```
@@ -35,7 +35,7 @@ Lets take a closer look at the generated code! Here are some of the more importa
 | tsconfig.json | Configurations for the TypeScript compiler. |
 | src/assets | Used to store static assets for the project (e.g. images). |
 | src/environments | Used to store different environment configurations (e.g. development, production). |
-| src/index.html | This is the HTML which will be first loaded when a user visits the page. |
+| src/index.html | This is the HTML which will be loaded first when a user visits the page. |
 | src/main.ts | The entry point of the application. |
 | src/polyfills.ts | Scripts required for cross browser support. |
 | src/styles.scss | The global stylesheet. |
@@ -59,7 +59,7 @@ Install bootstrap, which we will be using to help us with styling the applicatio
 npm i bootstrap
 ```
 
-Open **src/styles.scss** and add the following to enable bootstrap for our application, and give some styling to iy:
+Open **src/styles.scss** and add the following to enable bootstrap for our application, and give some styling to it:
 ```
 @import "~bootstrap/scss/bootstrap";
 
@@ -107,7 +107,7 @@ ng g c pages/home-page --skip-selector
 ```
 
 *Note: In the Angular terminology we usually differentiate three types of components:
-- **dumb/pure components:** their state depends entirely on ther inputs, therefore they are the most low-level and reusable of the three.
+- **dumb/pure components:** their state depends entirely on their inputs, therefore they are the most low-level and reusable of the three.
 - **smart components:** smart components are usually more "wired together" with the application, they depend on services, inject dependencies, etc. They usually contain dumb components and are not really reusable themselves.
 - **page components:** page components are smart components which are loaded through routing, therefore they don't need HTML selectors, as they aren't instantiated from HTML, but based on the route.
 
@@ -147,7 +147,7 @@ This is a short description of the game, and a button, which will lead us to the
 *Note: notice the [ ] for propery binding.*
 
 ## 3. Guided task: Implementing the game logic
-In the next part, we will implement the gamelogic itself.
+In the next part, we will implement the game logic itself.
 
 ### 3.1. Models
 Create a folder under the app folder named model! Under this folder, we will create two files, the first is:
@@ -176,7 +176,7 @@ export const ALPHABET: string[] = ["A","B","C","D","E","F","G","H","I","J","K","
 export const MAX_NUMBER_OF_GUESSES = 6;
 
 ```
-This interface describes how a guess object looks like, some usefull constants are also defined in this file.
+This interface describes how a guess object looks like, some useful constants are also defined in this file.
 
 ### 3.2. Game service
 Let's create the game service! Run the following command:
@@ -184,7 +184,7 @@ Let's create the game service! Run the following command:
 ng g s services/game
 ```
 
-Replace the contents of the newly generated game.service.ts with the follwing:
+Replace the contents of the newly generated game.service.ts with the following:
 
 ```
 import { HttpClient } from '@angular/common/http';
@@ -306,7 +306,7 @@ export class GameService {
 ```
 This implements the core game logic, let's study the main parts of it!
 
-In the constructor, we inject the `HttpClient`, which is a service used to make HTTP request. To make it available for our service, we must provide first! Add the following to the **app.module.ts**, at the appropriate places!
+In the constructor, we inject the `HttpClient`, which is a service used to make HTTP request. To make it available for our service, we must import it first! Add the following to the **app.module.ts**, at the appropriate places!
 
 ```
 import { HttpClientModule } from '@angular/common/http';
@@ -366,7 +366,7 @@ export class MatchColorPipe implements PipeTransform {
 ```
 
 ### 4.2. Create the letter component
-The letter component will be out first real reusable, dumb component. Its purpose is to disaply a single letter of a guess. Create it with the following command:
+The letter component will be our first real reusable, dumb component. Its purpose is to display a single letter of a guess. Create it with the following command:
 
 ```
 ng g c components/letter 
@@ -446,7 +446,7 @@ export class GuessComponent implements OnInit {
 }
 ```
 
-Replace the contents of th **guess.component.html** with the following:
+Replace the contents of the **guess.component.html** with the following:
 ```
 <div class="guess-row">
   <app-letter *ngFor="let index of [0, 1, 2, 3, 4]" [letter]="guess.word[index] || ''" [result]="guess.matches[index]"></app-letter>
@@ -494,7 +494,7 @@ export class KeyboardComponent implements OnInit {
 }
 ```
 
-Replace the contents of th **keyboard.component.html** with the following:
+Replace the contents of the **keyboard.component.html** with the following:
 
 ```
 <h4>Letters</h4>
@@ -511,13 +511,13 @@ Finally add some styling to the component by inserting the following into **keyb
 ```
 
 ### 4.5. Generate the game page component
-The final component which will use all the building blocks we created so far will be the game page component. Generate this new component using the following command:
+The final component which will use all of the building blocks we have created so far will be the game page component. Generate this new component using the following command:
 
 ```
 ng g c pages/game-page --skip-selector
 ```
 
-Set up routing for the new page, just like the previous time, add the following to the **app-routing.module.ts**:
+Set up routing for the new page, just like previously, add the following to the **app-routing.module.ts**:
 
 ```
 ...
@@ -602,25 +602,25 @@ npm start
 After finisihing the initial startup, the application will be available on `http://localhost:4200`
 
 ## 5. Individual task: End game page component
-- Create and end game page available on the "/end" route.
+- Create an end game page available on the "/end" route.
 - The page should contain a "Game over" label.
-- When the game finished navigate to this page automatically.
+- When the game has finished, navigate to this page automatically.
 
 **Hints:**
-- To navigate from a component code, you can inject the Router to the game-page component (by making it a constructor parameter) and than use the navigateByUrl method when the game is finished.
+- To navigate from a component code, you can inject the Router to the game-page component (by making it a constructor parameter) and then use the navigateByUrl method when the game has finished.
 
 ## 6. Individual task: End game page dynamic content 
 - Extend the previously created end game page, to either say "Congratulations!" or "Better luck next time!" based on the result of the game.
 - Create a new game button, which will be used to start a new game.
 
 **Hints:**
-- The game result can be determined by the game-service, i.e. if the last guess is equals to the selected word, we can be sure that the player won. The game service can be injected to the new game result page component.
-- To conditionally display text, you can use the `NgIf` structural directive on parts of the HTML. Alternatively you can store the message in a variable and dispaly it using the interpolation operator (`{{ }}`).
+- The game result can be determined by the game-service, i.e. if the last guess is equals to the selected word, we can be sure that the player won. The game service can be injected into the end game page component.
+- To conditionally display text, you can use the `NgIf` structural directive on parts of the HTML. Alternatively you can store the message in a variable and display it using the interpolation operator (`{{ }}`).
 
 ## 7. Individual task: End game statistics
-- When playing multiple games, save the statistics on how many gueses each game took to finish. E.g. 1 guess: 0 game, 2 guess: 1 game, 3 guess: 5 games...
-- Display this statistic on the end game page in a table where the rows are the number of tries. E.g.
-- A game is considered lost, if after 6 tries the selected word is not found
+- When playing multiple games, save the statistics on how many guesses each game took to finish. E.g. 1 guess: 0 game, 2 guess: 1 game, 3 guess: 5 games...
+- Display this statistic on the end game page in a table where the rows are the number of tries.
+- A game is considered lost, if after 6 tries the selected word has not been found.
 
 | Number of tries | Games |
 | --- | --- |
