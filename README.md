@@ -61,7 +61,7 @@ npm i bootstrap
 
 Open **src/styles.scss** and add the following to enable bootstrap for our application, and give some styling to it:
 ```
-@import "~bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 
 @media (min-width: 510px) {
   .container{
